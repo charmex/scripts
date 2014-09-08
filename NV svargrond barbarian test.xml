@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindbotSettings>
+    <Healer>
+        <SpellHealer enabled="yes">
+            <HealRule name="exura" spell="Wound Cleansing" condition="Health Percent below" conditionMin="80" conditionMax="80" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="800" spamMax="1000" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </SpellHealer>
+        <PotionHealer enabled="yes">
+            <HealRule name="Health" spell="Health Potion" condition="Health Percent below" conditionMin="33" conditionMax="36" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="500" spamMax="600" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </PotionHealer>
+        <ConditionHealer enabled="no"/>
+        <ManaTrainer manaTrainCondition="Mana Percent above" manaTrainMin="90" manaTrainMax="99" enabled="yes">
+            <HealRule name="exura ico" spell="Wound Cleansing" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="500" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </ManaTrainer>
+    </Healer>
+    <Scripter>
+        <HotkeyScripts>
+            <HotkeyScript name="PauseHotkey" script="if not $cavebot or not $targeting then&#13;&#10;    listas('Enabling Cavebot and Targeting')&#13;&#10;    setcavebot('on')&#13;&#10;    settargeting('on')&#13;&#10;    wait(1000)&#13;&#10;else&#13;&#10;    listas('Disabling Cavebot and Targeting')&#13;&#10;    setcavebot('off')&#13;&#10;    settargeting('off')&#13;&#10;    stopattack()&#13;&#10;    wait(1000)&#13;&#10;end" triggerKey="Pause" hotkeyTriggerMode="0"/>
+        </HotkeyScripts>
+        <PersistentScripts>
+            <PersistentScript name="levelToSupply" script="sLevel = 12" enabled="yes"/>
+            <PersistentScript name="NewPersistentScript" script="auto(200)&#10;local lastmsg = $lastnpcmsg.content&#10;listas(lastmsg)" enabled="yes"/>
+        </PersistentScripts>
+    </Scripter>
+    <HUDs>
+        <HUDScripts>
+            <HUDScript name="ShowWaypoints" script="init start&#10;&#9;-- local SCRIPT_VERSION = '1.2.1'&#10;&#10;&#9;local waypointColors = {&#10;&#9;&#9;walk    = 0xAAF200,&#10;&#9;&#9;node    = 0x2A0736,&#10;&#9;&#9;stand   = 0x00AACC,&#10;&#9;&#9;shovel  = 0xEB8540,&#10;&#9;&#9;rope    = 0xFFCC00,&#10;&#9;&#9;machete = 0x003366,&#10;&#9;&#9;ladder  = 0xC55186,&#10;&#9;&#9;use     = 0x36693E,&#10;&#9;&#9;action  = 0x00FFFF,&#10;&#9;&#9;lure    = 0xCCCCCC&#10;&#9;}&#10;&#10;&#9;local function deleteWaypointCall(menu)&#10;&#9;&#9;removewaypoint(menu.waypointID)&#10;&#9;end&#10;&#10;&#9;local function moveWaypointName()&#10;&#9;&#9;if resizedWpt == nil then&#10;&#9;&#9;&#9;return tern(draggedWpt == nil, 'Move Waypoint', 'Stop Moving')&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function moveWaypointCall(menu)&#10;&#9;&#9;if draggedWpt == nil then&#10;&#9;&#9;&#9;draggedWpt = menu.waypoint&#10;&#9;&#9;else&#10;&#9;&#9;&#9;draggedWpt = nil&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function resizeWaypointName()&#10;&#9;&#9;if draggedWpt == nil then&#10;&#9;&#9;&#9;return tern(resizedWpt == nil, 'Resize Waypoint', 'Stop Resizing')&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function resizeWaypointCall(menu)&#10;&#9;&#9;if resizedWpt == nil then&#10;&#9;&#9;&#9;resizedWpt = menu.waypoint&#10;&#9;&#9;else&#10;&#9;&#9;&#9;resizedWpt = nil&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;registermessagehandler('contextMenu_waypoint', moveWaypointName, moveWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', resizeWaypointName, resizeWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', 'Delete Waypoint', deleteWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', MENU_SEPARATOR, nil)&#10;&#10;&#9;local xOffset, yOffset, worldWidth, worldHeight, x, y, z, topLeftTilePos,&#10;&#9;      botRightTilePos, width, height, text, label&#10;&#9;local waypointRect = {}&#10;&#10;&#9;function gettilepos(x, y, z)&#10;&#9;&#9;local tile = getobjectarea(x, y, z)&#10;&#10;&#9;&#9;if tile == nil then&#10;&#9;&#9;&#9;local xDiff, yDiff = x - $posx, y - $posy&#10;&#9;&#9;&#9;if math.abs($posx - x) &lt;= 7 then&#10;&#9;&#9;&#9;&#9;tile = getobjectarea(x, $posy, $posz)&#10;&#9;&#9;&#9;&#9;xDiff = 0&#10;&#9;&#9;&#9;elseif math.abs($posy - y) &lt;= 5 then&#10;&#9;&#9;&#9;&#9;tile = getobjectarea($posx, y, $posz)&#10;&#9;&#9;&#9;&#9;yDiff = 0&#10;&#9;&#9;&#9;else&#10;&#9;&#9;&#9;&#9;tile = getobjectarea($posx, $posy, $posz)&#10;&#9;&#9;&#9;end&#10;&#10;&#9;&#9;&#9;-- Some strange stuff happens when you go from 0 to -1, so I'm&#10;&#9;&#9;&#9;-- adding this as a precaution.&#10;&#9;&#9;&#9;if tile ~= nil then&#10;&#9;&#9;&#9;&#9;local width, height = $worldwin.width, $worldwin.height&#10;&#10;&#9;&#9;&#9;&#9;tile.left    = tile.left    + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.right   = tile.right   + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.centerx = tile.centerx + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.top     = tile.top     + (height * yDiff)&#10;&#9;&#9;&#9;&#9;tile.bottom  = tile.bottom  + (height * yDiff)&#10;&#9;&#9;&#9;&#9;tile.centery = tile.centery + (height * yDiff)&#10;&#9;&#9;&#9;end&#10;&#9;&#9;end&#10;&#10;&#9;&#9;return tile&#10;&#9;end&#10;&#10;&#9;useworldhud()&#10;init end&#10;&#10;setfontstyle('Tahoma', 7, 75, 0xFFFFFF, 1, 0x000000)&#10;&#10;xOffset, yOffset = $worldwin.left - $clientwin.left, $worldwin.top - $clientwin.top&#10;worldWidth, worldHeight = $worldwin.right - $worldwin.left - 2, $worldwin.bottom - $worldwin.top - 2&#10;&#10;local i = 0&#10;foreach settingsentry e 'Cavebot/Waypoints' do&#10;&#9;x, y, z = getsetting(e, 'Coordinates'):match(REGEX_SPA_COORDS)&#10;&#9;x, y, z = tonumber(x), tonumber(y), tonumber(z)&#10;&#10;&#9;if z == $posz then&#10;&#9;&#9;width, height = getsetting(e, 'Range'):match(REGEX_SPA_SIZE)&#10;&#9;&#9;width, height = tonumber(width), tonumber(height)&#10;&#10;&#9;&#9;topLeftTilePos = gettilepos(x, y, z)&#10;&#9;&#9;botRightTilePos = gettilepos(x + width - 1, y + height - 1, z)&#10;&#10;&#9;&#9;if topLeftTilePos and botRightTilePos then&#10;&#9;&#9;&#9;waypointRect.left   = math.max(topLeftTilePos.left  , 0)&#10;&#9;&#9;&#9;waypointRect.top    = math.max(topLeftTilePos.top   , 0)&#10;&#9;&#9;&#9;waypointRect.right  = math.min(botRightTilePos.right , worldWidth)&#10;&#9;&#9;&#9;waypointRect.bottom = math.min(botRightTilePos.bottom, worldHeight)&#10;&#9;&#9;&#9;waypointRect.width  = waypointRect.right - waypointRect.left&#10;&#9;&#9;&#9;waypointRect.height = waypointRect.bottom - waypointRect.top&#10;&#10;&#9;&#9;&#9;if waypointRect.width &gt; 0 and waypointRect.height &gt; 0 then&#10;&#9;&#9;&#9;&#9;label = getsetting(e, 'Label')&#10;&#9;&#9;&#9;&#9;text = tern(#label == 0, tostring(i), label .. ' (' .. i .. ')')&#10;&#9;&#9;&#9;&#9;wptType = getsetting(e, 'Type')&#10;&#10;&#9;&#9;&#9;&#9;setfillstyle('color', (waypointColors[wptType:lower()] or 0) + (math.floor(2.55*50)*16777216))&#10;&#9;&#9;&#9;&#9;drawroundrect(&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.left,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.top,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.width,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.height,&#10;&#9;&#9;&#9;&#9;&#9;10, 10&#10;&#9;&#9;&#9;&#9;)&#10;&#10;&#9;&#9;&#9;&#9;if waypointRect.width &gt; 10 then&#10;&#9;&#9;&#9;&#9;&#9;drawtext(&#10;&#9;&#9;&#9;&#9;&#9;&#9;string.fit(text, waypointRect.width - 10, '...', true),&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.left + 5,&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.top + 3&#10;&#9;&#9;&#9;&#9;&#9;)&#10;&#9;&#9;&#9;&#9;&#9;drawtext(&#10;&#9;&#9;&#9;&#9;&#9;&#9;string.fit(wptType, waypointRect.width - 10, '...', true),&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.left + 5,&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.top + 15&#10;&#9;&#9;&#9;&#9;&#9;)&#10;&#9;&#9;&#9;&#9;end&#10;&#9;&#9;&#9;end&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;i = i + 1&#10;end&#10;&#10;if contextmenuinfo() == nil then&#10;&#9;if draggedWpt then&#10;&#9;&#9;set(draggedWpt, 'Coordinates', string.format('x:%i, y:%i, z:%i', $cursorinfo.x, $cursorinfo.y, $cursorinfo.z))&#10;&#9;elseif resizedWpt then&#10;&#9;&#9;local x, y = get(resizedWpt, 'Coordinates'):match(REGEX_COORDS)&#10;&#9;&#9;x, y = tonumber(x), tonumber(y)&#10;&#10;&#9;&#9;set(resizedWpt, 'Range', string.format('%i x %i', math.max(1, 1 + ($cursorinfo.x - x)) , math.max(1, 1 + ($cursorinfo.y - y))))&#10;&#9;end&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="MonitorMyStats" script="init start&#10;    --&#10;    --              88                                                                  &#10;    --              &quot;&quot;                                                ,d                &#10;    --                                                                88                &#10;    --   ,adPPYba,  88  8b,dPPYba,  88,dPYba,,adPYba,   ,adPPYYba,  MM88MMM  ,adPPYba,  &#10;    --   I8[    &quot;&quot;  88  88P'   &quot;Y8  88P'   &quot;88&quot;    &quot;8a  &quot;&quot;     `Y8    88    a8P_____88  &#10;    --    `&quot;Y8ba,   88  88          88      88      88  ,adPPPPP88    88    8PP&quot;&quot;&quot;&quot;&quot;&quot;&quot;  &#10;    --   aa    ]8I  88  88          88      88      88  88,    ,88    88,   &quot;8b,   ,aa  &#10;    --   `&quot;YbbdP&quot;'  88  88          88      88      88  `&quot;8bbdP&quot;Y8    &quot;Y888  `&quot;Ybbd8&quot;'  &#10;    --&#10;&#10;    --   Name: Monitor My Stats&#10;    --   Last Updated: 19/12/2013&#10;    --   Version: 1.0&#10;&#10;    local MMS = {&#10;        ShowInfo = false,&#10;&#10;        Title = &quot;SCRIPT INFO&quot;,&#10;        Creator = &quot;CREATOR NAME&quot;,&#10;        Info = 'Voc - Script Name',&#10;        Version = '1.0.0'&#10;    }&#10;&#10;    -- [[ Do not change anything below this line. ]] --&#10;&#10;    filterinput(false, true, false, false)&#10;&#10;    local HUD_Sections = {&#10;        {Name = 'OTHERS', State = true, Items = {&#10;                {'Ping', function() return $ping .. ' (avg: ' .. $pingaverage .. ')' end},&#10;                {'Bank Balance', function() return num($balance) end},&#10;            }&#10;        },&#10;&#10;        {Name = 'CHARACTER STATS', State = true, Items = {&#10;                {'Level', function() return $level .. ' (' .. 100 - math.floor(($exp - expatlvl($level)) * 100 / (expatlvl($level + 1) - expatlvl($level))) .. '%)' end},&#10;                {'Experience', function() return num($exp) end},&#10;                {'Magic Level', function() return $mlevel .. ' (' .. 100 - $mlevelpc .. '%)' end},&#10;                {'Weapon Skill', function() local _ = WeaponSkill() return _.skill .. ' (' .. 100 - _.skillpc .. '%)' end},&#10;                {'Shielding', function() return $shielding .. ' (' .. 100 - $shieldingpc .. '%)' end},&#10;                {'Fishing', function() return $fishing .. ' (' .. 100 - $fishingpc .. '%)' end}&#10;            }&#10;        },&#10;&#10;        {Name = 'ENGINE STATES', State = true, Items = {&#10;                {'Spell Healer', function() return getsetting('SpellHealer/Enabled') end, function() return toggle('SpellHealer/Enabled') end},&#10;                {'Potion Healer', function() return getsetting('PotionHealer/Enabled') end, function() return toggle('PotionHealer/Enabled') end},&#10;                {'Condition Healer', function() return getsetting('ConditionHealer/Enabled') end, function() return toggle('ConditionHealer/Enabled') end},&#10;                {'Mana Training', function() return getsetting('ManaTrainer/Enabled') end, function() return toggle('ManaTrainer/Enabled') end},&#10;                {'Cavebot', function() return getsetting('Cavebot/Enabled') end, function() return toggle('Cavebot/Enabled') end},&#10;                {'Looting', function() return getsetting('Looting/Enabled') end, function() return toggle('Looting/Enabled') end},&#10;                {'Targeting', function() return getsetting('Targeting/Enabled') end, function() return toggle('Targeting/Enabled') end}&#10;            }&#10;        },&#10;&#10;        {Name = 'BOTTING STATS', State = true, Items = {&#10;                {'Experience per Hour', function() return num($exphour) end},&#10;                {'Experience Left', function() return num(exptolevel()) end},&#10;                {'Experience Today', function() return num($expgained) end},&#10;                {'Time to Next Level', function() return time(timetolevel()) end},&#10;                {'Played Time', function() return time(math.floor($charactertime / 1000)) end},&#10;                {'Stamina', function() return time($stamina) end}&#10;            }&#10;        }&#10;    }&#10;&#10;    local HUD_Colors = {&#10;            Font = color(255, 255, 255, 0),&#10;            SectionHeaderBackground = {0.0, color(36, 68, 105, 20), 0.23, color(39, 73, 114, 20), 0.76, color(21, 39, 60, 20)},&#10;            EntryNameBackground = {0.0, color(75, 75, 75, 20), 0.23, color(45, 45, 45, 20), 0.76, color(19, 19, 19, 20)},&#10;            EntryValueBackground = {0.0, color(145, 95, 0, 20), 0.23, color(158, 104, 0, 20), 0.76, color(84, 55, 0, 20)},&#10;            EntryValueEnabledBackground = {0.0, color(65, 96, 12, 20), 0.23, color(67, 99, 13, 20), 0.76, color(36, 52, 6, 20)},&#10;            EntryValueDisabledBackground = {0.0, color(90, 12, 15, 20), 0.23, color(98, 13, 17, 20), 0.76, color(52, 6, 9, 20)},&#10;    }&#10;&#10;    function WeaponSkill()&#10;        local SkillTypes = {&#10;            ['axe'] = {type = 'axe', skill = $axe, skillpc = $axepc},&#10;            ['club'] = {type = 'club', skill = $club, skillpc = $clubpc},&#10;            ['sword'] = {type = 'sword', skill = $sword, skillpc = $swordpc},&#10;            ['bow'] = {type = 'distance', skill = $distance, skillpc = $distancepc},&#10;            ['distance weapon'] = {type = 'distance', skill = $distance, skillpc = $distancepc},&#10;            ['no weapon'] = {type = 'fist', skill = $fist, skillpc = $fistpc},&#10;            ['rod'] = {type = 'magic', skill = $mlevel, skillpc = $mlevelpc},&#10;            ['wand'] = {type = 'magic', skill = $mlevel, skillpc = $mlevelpc},&#10;        }&#10;&#10;        return SkillTypes[findweapontype()]&#10;    end&#10;&#10;    local Moving, Temp, Moved = false, {0, 0}, {0, 0}&#10;&#10;    function inputevents(e)&#10;        if (e.type == IEVENT_LMOUSEDOWN) then&#10;            for _, Section in ipairs(HUD_Sections) do&#10;                if (e.elementid == Section.StateSwitch) then&#10;                    Section.State = not Section.State&#10;                    return&#10;                end&#10;            end&#10;        for _, Section in ipairs(HUD_Sections) do&#10;                if (Section.Name == 'ENGINE STATES') then&#10;                    for _, SectionItem in ipairs(Section.Items) do&#10;                        if (e.elementid == SectionItem[4]) then&#10;                            SectionItem[3]()&#10;                            return&#10;                        end&#10;                    end&#10;                end&#10;            end&#10;        end&#10;&#10;        if (e.type == IEVENT_MMOUSEDOWN) then&#10;            Moving, Temp = true, {$cursor.x - Moved[1], $cursor.y - Moved[2]}&#10;        end&#10;&#10;        if (e.type == IEVENT_MMOUSEUP) then&#10;            Moving = false&#10;        end&#10;    end&#10;    &#10;    setmaskcolorxp(0)&#10;init end&#10;&#10;if (Moving) then&#10;    auto(10)&#10;    Moved = {$cursor.x - Temp[1], $cursor.y - Temp[2]}&#10;end&#10;&#10;setposition($clientwin.left + 5 + Moved[1], $worldwin.top + Moved[2])&#10;setfontstyle('Tahoma', 8, 75, 0xFFFFFF, 1, color(0, 0, 0, 20))&#10;&#10;local YPosition, SectionRow, SectionItemsRow = 0, 0, 0&#10;&#10;if MMS.ShowInfo then&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 22)&#10;    addgradcolors(unpack(HUD_Colors.SectionHeaderBackground))&#10;    drawroundrect(0, 0, 240, 21, 2, 2)&#10;    drawtext(MMS.Title, 6, 21 / 2 - StringHeight * 0.5)&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 22)&#10;    addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;    drawroundrect(130, 0, 110, 21, 2, 2)&#10;    drawtext(MMS.Creator, 136, 21 / 2 - StringHeight * 0.5)&#10;&#10;    setfontsize(7)&#10;&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;    drawroundrect(0, 24 + 0 * 18, 240, 15, 2, 2)&#10;    drawtext(MMS.Info, 6, 24 + 0 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;     &#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;    drawroundrect(0, 24 + 1 * 18, 240, 15, 2, 2)&#10;    drawtext('Script version:', 6, 24 + 1 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;     &#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;    drawroundrect(130, 24 + 1 * 18, 110, 15, 2, 2)&#10;    drawtext(MMS.Version, 136, 24 + 1 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;    &#10;    YPosition = 22 + 2 * 19&#10;end&#10;&#10;for SectionIndex, Section in ipairs(HUD_Sections) do&#10;    setfontsize(8)&#10;&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#10;    addgradcolors(unpack(HUD_Colors.SectionHeaderBackground))&#10;    drawroundrect(0, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 240, 20, 2, 2)&#10;    drawtext(Section.Name, 6, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 20 / 2 - StringHeight * 0.5 + 1)&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#10;    if (Section.State) then&#10;        addgradcolors(unpack(HUD_Colors.EntryValueEnabledBackground))&#10;    else&#10;        addgradcolors(unpack(HUD_Colors.EntryValueDisabledBackground))&#10;    end&#10;    Section.StateSwitch = drawroundrect(220, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 20, 20, 2, 2)&#10;    drawtext('X', 228, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 20 / 2 - StringHeight * 0.5 + 1)&#10;&#10;    SectionRow = SectionRow + 1&#10;&#10;    if (Section.State) then&#10;        setfontsize(7)&#10;&#10;        local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;        for SectionItemIndex, SectionItem in ipairs(Section.Items) do&#10;            setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)     &#10;            addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;            drawroundrect(0, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 240, 16, 2, 2)&#10;            drawtext(SectionItem[1], 6, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;&#10;            if (Section.Name == 'ENGINE STATES') then&#10;                local EngineCurrentState = SectionItem[2]()&#10;&#10;                setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)&#10;                if (EngineCurrentState == 'yes') then&#10;                    addgradcolors(unpack(HUD_Colors.EntryValueEnabledBackground))&#10;                else&#10;                    addgradcolors(unpack(HUD_Colors.EntryValueDisabledBackground))&#10;                end&#10;                HUD_Sections[SectionIndex].Items[SectionItemIndex][4] = drawroundrect(130, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 110, 16, 2, 2)&#10;&#10;&#10;                drawtext((EngineCurrentState == 'yes' and ('On')) or ('Off'), 136, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;            else&#10;                setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)&#10;                addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;                drawroundrect(130, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 110, 16, 2, 2)&#10;                drawtext(SectionItem[2](), 136, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;            end&#10;&#10;            SectionItemsRow = SectionItemsRow + 1&#10;        end&#10;    end&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="ActiveHotkeys" script="init start&#13;&#10;&#9;-- local SCRIPT_VERSION = '1.0.1'&#13;&#10;&#9;&#13;&#10;&#9;local types = {&quot;hotkey&quot;, &quot;persistent&quot;, &quot;cavebot&quot;}&#13;&#10;&#9;local fontsize = 7&#13;&#10;&#9;local fontspacing = fontsize + 6&#13;&#10;&#9;&#13;&#10;&#9;setfontstyle(&quot;Tahoma&quot;, fontsize, 99, 0xE4B31B, 1)&#13;&#10;&#9;setmaskcolorxp(0)&#13;&#10;init end&#13;&#10;&#13;&#10;local row = 0&#13;&#10;for _,scripttype in ipairs(types) do&#13;&#10;&#9;local i = 0&#13;&#10;&#9;while isscript(scripttype, i) do&#13;&#10;&#9;&#9;local listname = scriptlistname(scripttype, i)&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;if listname ~= &quot;&quot; then&#13;&#10;&#9;&#9;&#9;setfontcolor(scriptlistcolor(scripttype, i))&#13;&#10;&#9;&#9;&#9;drawtext(listname, 2, 2 + row*fontspacing)&#13;&#10;&#9;&#9;&#9;row = row + 1&#13;&#10;&#9;&#9;end&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;i = i + 1&#13;&#10;&#9;end&#13;&#10;end&#13;&#10;&#13;&#10;setposition($clientwin.left + 7, $worldwin.bottom - row*fontspacing - 1)" enabled="yes" refreshRate="100"/>
+        </HUDScripts>
+    </HUDs>
+    <GeneralSettings>
+        <Input>
+            <MouseOption mouseMode="Simulate Mouse"/>
+            <MouseOption scrollMode="Use mouse wheel"/>
+            <MouseOption stuckCursorPolicy="If Cavebot on, Release Instantly"/>
+            <MouseOption moveSpeed="7"/>
+            <MouseOption clickWaitMin="100" clickWaitMax="150"/>
+            <KeyboardOption keyboardMode="Simulate Keyboard"/>
+            <KeyboardOption stuckCtrlShiftPolicy="If Cavebot on, Release Instantly"/>
+            <KeyboardOption typeWaitMin="110" typeWaitMax="140"/>
+            <KeyboardOption pressWaitMin="100" pressWaitMax="250"/>
+            <FocusOption focusPolicy="Don't auto-focus"/>
+            <FocusOption openMenuPolicy="Confirm if cavebotting"/>
+        </Input>
+    </GeneralSettings>
+    <Alerts disableSounds="no">
+        <alert name="Player On Screen" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Player Attacking" playSound="yes" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Monster Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Private Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Default Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="GM Detected" playSound="yes" pauseBot="no" logout="no"/>
+        <alert name="Disconnected" playSound="yes" pauseBot="no" logout="no"/>
+        <alert name="Character Stuck" playSound="no" pauseBot="no" logout="no" standTime="30000"/>
+        <alert name="Health Below" playSound="no" pauseBot="no" logout="no" healthPercent="50"/>
+        <alert name="Mana Below" playSound="no" pauseBot="no" logout="no" manaPercent="50"/>
+        <alert name="Unjust Kill" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Enemies Online" playSound="no" pauseBot="no" logout="no" enemiesCount="50"/>
+    </Alerts>
+    <Cavebot enabled="no">
+        <Options>
+            <Option shovel="3457"/>
+            <Option rope="3003"/>
+            <Option machete="3308"/>
+            <Option pick="3456"/>
+            <Option nodeRange="4"/>
+            <Option pauseBotOnDeath="yes"/>
+            <Option refillAmmo="no" refillAmmoMin="30" refillAmmoMax="70"/>
+            <Option autoMount="no"/>
+            <Option fireAvoidanceMin="15" fireAvoidanceMax="20"/>
+            <Option energyAvoidanceMin="15" energyAvoidanceMax="20"/>
+            <Option poisonAvoidanceMin="15" poisonAvoidanceMax="20"/>
+            <Option walkThroughPlayers="yes"/>
+            <Option walkMethod="Walk With Arrow Keys"/>
+            <Option walkableItems=""/>
+            <Option mapWalkDistMin="20" mapWalkDistMax="30"/>
+            <Option userOptionsScript=""/>
+        </Options>
+        <SpecialAreas/>
+        <CavebotScripts>
+            <CavebotScript name="NewCavebotScript" script="" enabled="no"/>
+        </CavebotScripts>
+        <WaypointSection name="Start">
+            <Waypoint type="Action" x="32267" y="31141" z="7" rangeX="1" rangeY="1" script="-- Bp Opener --&#10;closewindows()&#10;openitem(0, 'back')&#10;wait(500,1000)&#10;resizewindows(0, '0')&#10;wait(500,1000)"/>
+            <Waypoint type="Stand" x="32267" y="31141" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32267" y="31141" z="7" rangeX="1" rangeY="1" label="IsNotGoToBoat" script="-- Pos Checker --&#10;auto(200)&#10;if  $posx == 32267 and $posy == 31141 and $posz == 7 then&#10;    gotolabel('Depot')&#10;else&#10;gotolabel('Boat')&#10;end"/>
+            <Waypoint type="Stand" x="32341" y="31108" z="6" rangeX="1" rangeY="1" label="Boat"/>
+            <Waypoint type="Stand" x="32341" y="31111" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32341" y="31112" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32340" y="31117" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32321" y="31118" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32290" y="31133" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32279" y="31140" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32266" y="31141" z="7" rangeX="1" rangeY="1" label="Depot"/>
+            <Waypoint type="Walk" x="32255" y="31141" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32225" y="31150" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32218" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32205" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32205" y="31155" z="7" rangeX="1" rangeY="1" script="-- Gotolabel --&#10;gotolabel(0, &quot;HellwithSven&quot;)"/>
+        </WaypointSection>
+        <WaypointSection name="HellwithSven">
+            <Waypoint type="Stand" x="32202" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32201" y="31155" z="7" rangeX="1" rangeY="1" label="SvenBegin" script="-- Npc Talking --&#10;reachcreature('Sven')&#10;follow('Sven')&#10;say('hi') wait(2000, 2500)&#10;npcsay('barbarians')&#10;wait(1000, 1300)&#10;npcsay('test')&#10;wait(1000, 1300)&#10;npcsay('yes')&#10;wait(1000, 1300)&#10;npcsay('yes')&#10;wait(1000, 1300)&#10;npcsay('barbarian mead')&#10;wait(1000, 1300)&#10;npcsay('yes')&#10;wait(1000, 1300)&#10;npcsay('bye')&#10;wait(1000, 1300)"/>
+            <Waypoint type="Stand" x="32202" y="31154" z="7" rangeX="1" rangeY="1" label="Using"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Use" x="32201" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32201" y="31155" z="7" rangeX="1" rangeY="1" label="SvenAgain"/>
+            <Waypoint type="Action" x="32201" y="31155" z="7" rangeX="1" rangeY="1" script="-- Npc Talking --&#10;reachcreature('Sven')&#10;follow('Sven')&#10;say('hi') wait(2000, 2500)&#10;npcsay('barbarian mead')&#10;wait(2000,3000)&#10;&#10;if $lastnpcmsg.content == &quot;Do you have some honey with you?&quot; then&#10;&#9;wait(1000, 1300)&#10;&#9;npcsay('yes')&#10;&#9;wait(1000, 1300)&#10;&#9;gotolabel('Using')&#10;end&#10;&#10;if $lastnpcmsg.content == &quot;First drink the sips you have still left.&quot; then&#10;&#9;wait(1000, 1300)&#10;&#9;gotolabel('Using')&#10;&#9;else&#10;&#9;wait(1000, 1300)&#10;&#9;npcsay('bye')&#10;end"/>
+            <Waypoint type="Stand" x="32203" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32203" y="31155" z="7" rangeX="1" rangeY="1" script="-- Gotolabel --&#10;gotolabel(&quot;DrinkingDone&quot;, &quot;Waypoints&quot;)"/>
+        </WaypointSection>
+        <WaypointSection name="Waypoints">
+            <Waypoint type="Stand" x="32205" y="31155" z="7" rangeX="1" rangeY="1" label="DrinkingDone"/>
+            <Waypoint type="Stand" x="32201" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32201" y="31155" z="7" rangeX="1" rangeY="1" script="-- Filling mead horn --&#10;useitemon(7140, 0, ground(32201, 31154, 7))"/>
+            <Waypoint type="Walk" x="32210" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32223" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32236" y="31138" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32238" y="31121" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32243" y="31109" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32244" y="31109" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32246" y="31107" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32246" y="31106" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32241" y="31102" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32239" y="31081" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32248" y="31068" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32253" y="31050" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32253" y="31050" z="5" rangeX="1" rangeY="1" label="BearHugging" script="-- Bear Hugging --&#10;useitemon(7141, 0, ground(32253, 31049, 5))&#10;wait(2000, 2500)&#10;useitem(0, ground(32253, 31049, 5))&#10;wait(2000, 2500)"/>
+            <Waypoint type="Walk" x="32251" y="31054" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32248" y="31067" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32243" y="31075" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32236" y="31089" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32236" y="31099" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32241" y="31102" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32246" y="31105" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32246" y="31106" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32245" y="31109" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32244" y="31109" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32241" y="31115" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32238" y="31134" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32225" y="31145" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32219" y="31157" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32204" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32204" y="31155" z="7" rangeX="1" rangeY="1" script="-- Npc Talking --&#10;reachcreature('Sven')&#10;follow('Sven')&#10;say('hi') wait(2000, 2500)&#10;npcsay('hug')&#10;wait(1000, 1300)"/>
+            <Waypoint type="Stand" x="32204" y="31160" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32204" y="31160" z="7" rangeX="1" rangeY="1" label="Buy3MugsOfMead" script="-- Npc Buyer --&#10;say('hi') wait(2000, 2500)&#10;npcsay('trade')&#10;wait(1000, 1300)&#10;buyitems(2880, 3)&#10;wait(1000, 1300)"/>
+            <Waypoint type="Walk" x="32207" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32218" y="31157" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32235" y="31140" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32240" y="31132" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32240" y="31125" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32245" y="31113" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32245" y="31112" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32246" y="31107" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32246" y="31106" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32239" y="31101" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32235" y="31091" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32223" y="31083" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32201" y="31085" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32187" y="31078" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32174" y="31076" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32167" y="31069" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32164" y="31050" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32155" y="31043" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32154" y="31029" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32154" y="31029" z="5" rangeX="1" rangeY="1" label="MammothPushing" script="-- Mammoth Pusher --&#10;useoncreature(2880, $self)&#10;wait(1000, 1200)&#10;moveitems(2880, 'ground', '0', 1)&#10;wait(1000, 1200)&#10;useoncreature(2880, $self)&#10;wait(1000, 1200)&#10;moveitems(2880, 'ground', '0', 1)&#10;wait(1000, 1200)&#10;useoncreature(2880, $self)&#10;wait(1000, 1200)&#10;moveitems(2880, 'ground', '0', 1)&#10;wait(1000, 1200)&#10;useitem(0, ground(32154, 31028, 5))&#10;wait(2000, 2500)&#10;if itemcount(&quot;dwarven ring&quot;) &gt;= 1 then&#10;equipitem('dwarven ring', 'finger')&#10;wait(2000, 2500)&#10;end"/>
+            <Waypoint type="Walk" x="32154" y="31032" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32155" y="31039" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32159" y="31050" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32167" y="31060" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32172" y="31077" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32194" y="31080" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32204" y="31085" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32221" y="31083" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32235" y="31091" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32239" y="31103" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32243" y="31104" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32246" y="31105" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32246" y="31106" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32245" y="31109" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32244" y="31109" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32241" y="31116" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32239" y="31127" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32231" y="31143" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32222" y="31151" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32216" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32203" y="31154" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32203" y="31154" z="7" rangeX="1" rangeY="1" label="FinalSven" script="-- Npc Talking --&#10;reachcreature('npc')&#10;follow('npc')&#10;say('hi') wait(2000, 2500)&#10;npcsay('mammoth')&#10;wait(1000, 1300)"/>
+            <Waypoint type="Walk" x="32205" y="31155" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32214" y="31156" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32225" y="31151" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32237" y="31142" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32262" y="31140" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32262" y="31140" z="7" rangeX="1" rangeY="1" label="Logout" script="-- Logging out --&#10;setsetting('Cavebot/Enabled', 'no')&#10;--logout()"/>
+        </WaypointSection>
+    </Cavebot>
+    <Looting enabled="no">
+        <Options>
+            <Option range="10"/>
+            <Option moveItemsQuickly="yes"/>
+            <Option eatFoodFromCorpse="yes"/>
+            <Option openNextBP="no"/>
+            <Option openBPsAtLogin="no"/>
+            <Option valuableBodies="3000"/>
+            <Option ultraValuableBodies="50000"/>
+            <Option alertOnValuableBodies="no"/>
+            <Option openValuableBodiesOnly="no"/>
+            <Option openUltraValuableBodiesImmediately="no"/>
+            <Option policy="Smart Looting"/>
+            <LootingDestinations/>
+        </Options>
+        <LootingProfile name="LootList" isCurrentProfile="yes"/>
+    </Looting>
+    <Supplies>
+        <Options>
+            <Option defaultBackpack=""/>
+            <Option extraCashMin="1000" extraCashMax="2500"/>
+            <Option autoSwitchProfiles="no"/>
+        </Options>
+        <SupplyProfile name="SupplyList" vocation="Knight" level="38" isCurrentProfile="yes"/>
+    </Supplies>
+    <Targeting enabled="yes" allowDiagonalMovement="no" autoSwitchProfiles="no" nonPvPMode="no">
+        <TargetingProfile name="TargetList" vocation="Knight" level="38" targetMustBeShootable="no" targetMustBeReachable="yes" isCurrentProfile="yes">
+            <Priorities>
+                <Priority health="20"/>
+                <Priority proximity="30"/>
+                <Priority danger="10"/>
+                <Priority random="0"/>
+                <Priority lure="30"/>
+                <Priority stick="2"/>
+            </Priorities>
+            <Creatures>
+                <Creature name="Mammoth" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Polar Bear" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Winter Wolf" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Penguin" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+            </Creatures>
+        </TargetingProfile>
+    </Targeting>
+    <OtherBots>
+        <HealingPaths/>
+        <TargetingPaths/>
+    </OtherBots>
+</WindbotSettings>

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindbotSettings>
+    <Healer>
+        <SpellHealer enabled="yes">
+            <HealRule name="exura" spell="Wound Cleansing" condition="Health Percent below" conditionMin="80" conditionMax="80" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="800" spamMax="1000" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </SpellHealer>
+        <PotionHealer enabled="yes">
+            <HealRule name="Health" spell="Health Potion" condition="Health Percent below" conditionMin="33" conditionMax="36" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="500" spamMax="600" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+            <HealRule name="NewHealRule" spell="Mana Potion" condition="Mana below" conditionMin="40" conditionMax="40" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="1000" spamMax="1000" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </PotionHealer>
+        <ConditionHealer enabled="no"/>
+        <ManaTrainer manaTrainCondition="Mana Percent above" manaTrainMin="90" manaTrainMax="99" enabled="yes">
+            <HealRule name="exura ico" spell="Wound Cleansing" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="500" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </ManaTrainer>
+    </Healer>
+    <Scripter>
+        <HotkeyScripts>
+            <HotkeyScript name="PauseHotkey" script="if not $cavebot or not $targeting then&#13;&#10;    listas('Enabling Cavebot and Targeting')&#13;&#10;    setcavebot('on')&#13;&#10;    settargeting('on')&#13;&#10;    wait(1000)&#13;&#10;else&#13;&#10;    listas('Disabling Cavebot and Targeting')&#13;&#10;    setcavebot('off')&#13;&#10;    settargeting('off')&#13;&#10;    stopattack()&#13;&#10;    wait(1000)&#13;&#10;end" triggerKey="Pause" hotkeyTriggerMode="0"/>
+            <HotkeyScript name="NewHotkey" script="showbot()&#10;wait(2000)" triggerKey="Shift + F11" hotkeyTriggerMode="0"/>
+        </HotkeyScripts>
+        <PersistentScripts>
+            <PersistentScript name="NewPersistentScript" script="difficulty = 2" enabled="yes"/>
+            <PersistentScript name="Eatfood" script="listas('eatfood')&#10;auto(60000, 120000)&#10;for i = 1, 5 do&#10;&#9;eatfood()&#10;end" enabled="yes"/>
+            <PersistentScript name="NewPersistentScript1" script="auto(200)&#10;local str = ''&#10;foreach supplyitem s do&#10;&#9;str = str .. '{name = \'' .. s.name .. '\', count = ' .. s.count ..'}, '&#10;end&#10;&#10;listas(str)" enabled="no"/>
+        </PersistentScripts>
+    </Scripter>
+    <HUDs>
+        <HUDScripts>
+            <HUDScript name="GeneralInfo" script="init start&#13;&#10;&#9;-- local SCRIPT_VERSION = '1.0.0'&#13;&#10;&#9;&#13;&#10;&#9;local fontsize = 10&#13;&#10;&#9;local fontspacing = fontsize + 6&#13;&#10;&#9;setfontstyle(&quot;MS Serif&quot;, 10, 100, 0xCCCCCC, 1, 0x555555)&#13;&#10;&#9;&#13;&#10;&#9;local displayontitle = true -- set it to false to display it as a rectangular info instead&#13;&#10;&#9;local maxsize = 220&#13;&#10;&#9;&#13;&#10;&#9;setmaskcolorxp(0)&#13;&#10;init end&#13;&#10;&#13;&#10;auto(100)&#13;&#10;local info = {&#13;&#10;&#9;{color = 0xff5577, text = 'Exp/h: ', value = num($exphour)},&#13;&#10;&#9;{color = 0x77ff77, text = 'Level up: ', value = num($exptonextlevel) .. ' / ' .. time(timetolevel())},&#13;&#10;&#9;{color = 0x44eeff, text = 'Stamina: ', value = num($stamina)},&#13;&#10;&#9;{color = 0xcccccc, text = 'Ping: ', value = num($pingaverage)},&#13;&#10;&#9;{color = 0xc6b2ea, text = 'ItemID: ', value = $cursorinfo.id},&#13;&#10;}&#13;&#10;&#13;&#10;if (displayontitle) then&#13;&#10;&#9;local x = 0&#13;&#10;&#9;for _,j in ipairs(info) do&#13;&#10;&#9;&#9;local str = j.text .. j.value&#13;&#10;&#9;&#9;local w = measurestring(str)&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;setfontcolor(j.color)&#13;&#10;&#9;&#9;drawtext(str, x, 0)&#13;&#10;&#9;&#9;x = x + w + 50&#13;&#10;&#9;end&#13;&#10;&#13;&#10;&#9;setposition($clientwin.left + 30, $clientwin.top - 21)&#13;&#10;else&#13;&#10;&#9;for i,j in ipairs(info) do&#13;&#10;&#9;&#9;local w = measurestring(j.value)&#13;&#10;&#9;&#9;local posy = (i-1)*fontspacing&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;setfontcolor(j.color)&#13;&#10;&#9;&#9;drawtext(j.text, 2, posy)&#13;&#10;&#9;&#9;drawtext(j.value, maxsize-w, posy)&#13;&#10;&#9;end&#13;&#10;&#9;&#13;&#10;&#9;setposition($worldwin.left+20, $worldwin.top+8)&#13;&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="ShowWaypoints" script="init start&#10;&#9;-- local SCRIPT_VERSION = '1.2.1'&#10;&#10;&#9;local waypointColors = {&#10;&#9;&#9;walk    = 0xAAF200,&#10;&#9;&#9;node    = 0x2A0736,&#10;&#9;&#9;stand   = 0x00AACC,&#10;&#9;&#9;shovel  = 0xEB8540,&#10;&#9;&#9;rope    = 0xFFCC00,&#10;&#9;&#9;machete = 0x003366,&#10;&#9;&#9;ladder  = 0xC55186,&#10;&#9;&#9;use     = 0x36693E,&#10;&#9;&#9;action  = 0x00FFFF,&#10;&#9;&#9;lure    = 0xCCCCCC&#10;&#9;}&#10;&#10;&#9;local function deleteWaypointCall(menu)&#10;&#9;&#9;removewaypoint(menu.waypointID)&#10;&#9;end&#10;&#10;&#9;local function moveWaypointName()&#10;&#9;&#9;if resizedWpt == nil then&#10;&#9;&#9;&#9;return tern(draggedWpt == nil, 'Move Waypoint', 'Stop Moving')&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function moveWaypointCall(menu)&#10;&#9;&#9;if draggedWpt == nil then&#10;&#9;&#9;&#9;draggedWpt = menu.waypoint&#10;&#9;&#9;else&#10;&#9;&#9;&#9;draggedWpt = nil&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function resizeWaypointName()&#10;&#9;&#9;if draggedWpt == nil then&#10;&#9;&#9;&#9;return tern(resizedWpt == nil, 'Resize Waypoint', 'Stop Resizing')&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;local function resizeWaypointCall(menu)&#10;&#9;&#9;if resizedWpt == nil then&#10;&#9;&#9;&#9;resizedWpt = menu.waypoint&#10;&#9;&#9;else&#10;&#9;&#9;&#9;resizedWpt = nil&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;registermessagehandler('contextMenu_waypoint', moveWaypointName, moveWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', resizeWaypointName, resizeWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', 'Delete Waypoint', deleteWaypointCall)&#10;&#9;registermessagehandler('contextMenu_waypoint', MENU_SEPARATOR, nil)&#10;&#10;&#9;local xOffset, yOffset, worldWidth, worldHeight, x, y, z, topLeftTilePos,&#10;&#9;      botRightTilePos, width, height, text, label&#10;&#9;local waypointRect = {}&#10;&#10;&#9;function gettilepos(x, y, z)&#10;&#9;&#9;local tile = getobjectarea(x, y, z)&#10;&#10;&#9;&#9;if tile == nil then&#10;&#9;&#9;&#9;local xDiff, yDiff = x - $posx, y - $posy&#10;&#9;&#9;&#9;if math.abs($posx - x) &lt;= 7 then&#10;&#9;&#9;&#9;&#9;tile = getobjectarea(x, $posy, $posz)&#10;&#9;&#9;&#9;&#9;xDiff = 0&#10;&#9;&#9;&#9;elseif math.abs($posy - y) &lt;= 5 then&#10;&#9;&#9;&#9;&#9;tile = getobjectarea($posx, y, $posz)&#10;&#9;&#9;&#9;&#9;yDiff = 0&#10;&#9;&#9;&#9;else&#10;&#9;&#9;&#9;&#9;tile = getobjectarea($posx, $posy, $posz)&#10;&#9;&#9;&#9;end&#10;&#10;&#9;&#9;&#9;-- Some strange stuff happens when you go from 0 to -1, so I'm&#10;&#9;&#9;&#9;-- adding this as a precaution.&#10;&#9;&#9;&#9;if tile ~= nil then&#10;&#9;&#9;&#9;&#9;local width, height = $worldwin.width, $worldwin.height&#10;&#10;&#9;&#9;&#9;&#9;tile.left    = tile.left    + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.right   = tile.right   + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.centerx = tile.centerx + (width * xDiff)&#10;&#9;&#9;&#9;&#9;tile.top     = tile.top     + (height * yDiff)&#10;&#9;&#9;&#9;&#9;tile.bottom  = tile.bottom  + (height * yDiff)&#10;&#9;&#9;&#9;&#9;tile.centery = tile.centery + (height * yDiff)&#10;&#9;&#9;&#9;end&#10;&#9;&#9;end&#10;&#10;&#9;&#9;return tile&#10;&#9;end&#10;&#10;&#9;useworldhud()&#10;init end&#10;&#10;setfontstyle('Tahoma', 7, 75, 0xFFFFFF, 1, 0x000000)&#10;&#10;xOffset, yOffset = $worldwin.left - $clientwin.left, $worldwin.top - $clientwin.top&#10;worldWidth, worldHeight = $worldwin.right - $worldwin.left - 2, $worldwin.bottom - $worldwin.top - 2&#10;&#10;local i = 0&#10;foreach settingsentry e 'Cavebot/Waypoints' do&#10;&#9;x, y, z = getsetting(e, 'Coordinates'):match(REGEX_SPA_COORDS)&#10;&#9;x, y, z = tonumber(x), tonumber(y), tonumber(z)&#10;&#10;&#9;if z == $posz then&#10;&#9;&#9;width, height = getsetting(e, 'Range'):match(REGEX_SPA_SIZE)&#10;&#9;&#9;width, height = tonumber(width), tonumber(height)&#10;&#10;&#9;&#9;topLeftTilePos = gettilepos(x, y, z)&#10;&#9;&#9;botRightTilePos = gettilepos(x + width - 1, y + height - 1, z)&#10;&#10;&#9;&#9;if topLeftTilePos and botRightTilePos then&#10;&#9;&#9;&#9;waypointRect.left   = math.max(topLeftTilePos.left  , 0)&#10;&#9;&#9;&#9;waypointRect.top    = math.max(topLeftTilePos.top   , 0)&#10;&#9;&#9;&#9;waypointRect.right  = math.min(botRightTilePos.right , worldWidth)&#10;&#9;&#9;&#9;waypointRect.bottom = math.min(botRightTilePos.bottom, worldHeight)&#10;&#9;&#9;&#9;waypointRect.width  = waypointRect.right - waypointRect.left&#10;&#9;&#9;&#9;waypointRect.height = waypointRect.bottom - waypointRect.top&#10;&#10;&#9;&#9;&#9;if waypointRect.width &gt; 0 and waypointRect.height &gt; 0 then&#10;&#9;&#9;&#9;&#9;label = getsetting(e, 'Label')&#10;&#9;&#9;&#9;&#9;text = tern(#label == 0, tostring(i), label .. ' (' .. i .. ')')&#10;&#9;&#9;&#9;&#9;wptType = getsetting(e, 'Type')&#10;&#10;&#9;&#9;&#9;&#9;setfillstyle('color', (waypointColors[wptType:lower()] or 0) + (math.floor(2.55*50)*16777216))&#10;&#9;&#9;&#9;&#9;drawroundrect(&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.left,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.top,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.width,&#10;&#9;&#9;&#9;&#9;&#9;waypointRect.height,&#10;&#9;&#9;&#9;&#9;&#9;10, 10&#10;&#9;&#9;&#9;&#9;)&#10;&#10;&#9;&#9;&#9;&#9;if waypointRect.width &gt; 10 then&#10;&#9;&#9;&#9;&#9;&#9;drawtext(&#10;&#9;&#9;&#9;&#9;&#9;&#9;string.fit(text, waypointRect.width - 10, '...', true),&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.left + 5,&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.top + 3&#10;&#9;&#9;&#9;&#9;&#9;)&#10;&#9;&#9;&#9;&#9;&#9;drawtext(&#10;&#9;&#9;&#9;&#9;&#9;&#9;string.fit(wptType, waypointRect.width - 10, '...', true),&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.left + 5,&#10;&#9;&#9;&#9;&#9;&#9;&#9;waypointRect.top + 15&#10;&#9;&#9;&#9;&#9;&#9;)&#10;&#9;&#9;&#9;&#9;end&#10;&#9;&#9;&#9;end&#10;&#9;&#9;end&#10;&#9;end&#10;&#10;&#9;i = i + 1&#10;end&#10;&#10;if contextmenuinfo() == nil then&#10;&#9;if draggedWpt then&#10;&#9;&#9;set(draggedWpt, 'Coordinates', string.format('x:%i, y:%i, z:%i', $cursorinfo.x, $cursorinfo.y, $cursorinfo.z))&#10;&#9;elseif resizedWpt then&#10;&#9;&#9;local x, y = get(resizedWpt, 'Coordinates'):match(REGEX_COORDS)&#10;&#9;&#9;x, y = tonumber(x), tonumber(y)&#10;&#10;&#9;&#9;set(resizedWpt, 'Range', string.format('%i x %i', math.max(1, 1 + ($cursorinfo.x - x)) , math.max(1, 1 + ($cursorinfo.y - y))))&#10;&#9;end&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="MonitorMyStats" script="init start&#10;    --&#10;    --              88                                                                  &#10;    --              &quot;&quot;                                                ,d                &#10;    --                                                                88                &#10;    --   ,adPPYba,  88  8b,dPPYba,  88,dPYba,,adPYba,   ,adPPYYba,  MM88MMM  ,adPPYba,  &#10;    --   I8[    &quot;&quot;  88  88P'   &quot;Y8  88P'   &quot;88&quot;    &quot;8a  &quot;&quot;     `Y8    88    a8P_____88  &#10;    --    `&quot;Y8ba,   88  88          88      88      88  ,adPPPPP88    88    8PP&quot;&quot;&quot;&quot;&quot;&quot;&quot;  &#10;    --   aa    ]8I  88  88          88      88      88  88,    ,88    88,   &quot;8b,   ,aa  &#10;    --   `&quot;YbbdP&quot;'  88  88          88      88      88  `&quot;8bbdP&quot;Y8    &quot;Y888  `&quot;Ybbd8&quot;'  &#10;    --&#10;&#10;    --   Name: Monitor My Stats&#10;    --   Last Updated: 19/12/2013&#10;    --   Version: 1.0&#10;&#10;    local MMS = {&#10;        ShowInfo = false,&#10;&#10;        Title = &quot;SCRIPT INFO&quot;,&#10;        Creator = &quot;CREATOR NAME&quot;,&#10;        Info = 'Voc - Script Name',&#10;        Version = '1.0.0'&#10;    }&#10;&#10;    -- [[ Do not change anything below this line. ]] --&#10;&#10;    filterinput(false, true, false, false)&#10;&#10;    local HUD_Sections = {&#10;        {Name = 'OTHERS', State = true, Items = {&#10;                {'Ping', function() return $ping .. ' (avg: ' .. $pingaverage .. ')' end},&#10;                {'Bank Balance', function() return num($balance) end},&#10;            }&#10;        },&#10;&#10;        {Name = 'CHARACTER STATS', State = true, Items = {&#10;                {'Level', function() return $level .. ' (' .. 100 - math.floor(($exp - expatlvl($level)) * 100 / (expatlvl($level + 1) - expatlvl($level))) .. '%)' end},&#10;                {'Experience', function() return num($exp) end},&#10;                {'Magic Level', function() return $mlevel .. ' (' .. 100 - $mlevelpc .. '%)' end},&#10;                {'Weapon Skill', function() local _ = WeaponSkill() return _.skill .. ' (' .. 100 - _.skillpc .. '%)' end},&#10;                {'Shielding', function() return $shielding .. ' (' .. 100 - $shieldingpc .. '%)' end},&#10;                {'Fishing', function() return $fishing .. ' (' .. 100 - $fishingpc .. '%)' end}&#10;            }&#10;        },&#10;&#10;        {Name = 'ENGINE STATES', State = true, Items = {&#10;                {'Spell Healer', function() return getsetting('SpellHealer/Enabled') end, function() return toggle('SpellHealer/Enabled') end},&#10;                {'Potion Healer', function() return getsetting('PotionHealer/Enabled') end, function() return toggle('PotionHealer/Enabled') end},&#10;                {'Condition Healer', function() return getsetting('ConditionHealer/Enabled') end, function() return toggle('ConditionHealer/Enabled') end},&#10;                {'Mana Training', function() return getsetting('ManaTrainer/Enabled') end, function() return toggle('ManaTrainer/Enabled') end},&#10;                {'Cavebot', function() return getsetting('Cavebot/Enabled') end, function() return toggle('Cavebot/Enabled') end},&#10;                {'Looting', function() return getsetting('Looting/Enabled') end, function() return toggle('Looting/Enabled') end},&#10;                {'Targeting', function() return getsetting('Targeting/Enabled') end, function() return toggle('Targeting/Enabled') end}&#10;            }&#10;        },&#10;&#10;        {Name = 'BOTTING STATS', State = true, Items = {&#10;                {'Experience per Hour', function() return num($exphour) end},&#10;                {'Experience Left', function() return num(exptolevel()) end},&#10;                {'Experience Today', function() return num($expgained) end},&#10;                {'Time to Next Level', function() return time(timetolevel()) end},&#10;                {'Played Time', function() return time(math.floor($charactertime / 1000)) end},&#10;                {'Stamina', function() return time($stamina) end}&#10;            }&#10;        }&#10;    }&#10;&#10;    local HUD_Colors = {&#10;            Font = color(255, 255, 255, 0),&#10;            SectionHeaderBackground = {0.0, color(36, 68, 105, 20), 0.23, color(39, 73, 114, 20), 0.76, color(21, 39, 60, 20)},&#10;            EntryNameBackground = {0.0, color(75, 75, 75, 20), 0.23, color(45, 45, 45, 20), 0.76, color(19, 19, 19, 20)},&#10;            EntryValueBackground = {0.0, color(145, 95, 0, 20), 0.23, color(158, 104, 0, 20), 0.76, color(84, 55, 0, 20)},&#10;            EntryValueEnabledBackground = {0.0, color(65, 96, 12, 20), 0.23, color(67, 99, 13, 20), 0.76, color(36, 52, 6, 20)},&#10;            EntryValueDisabledBackground = {0.0, color(90, 12, 15, 20), 0.23, color(98, 13, 17, 20), 0.76, color(52, 6, 9, 20)},&#10;    }&#10;&#10;    function WeaponSkill()&#10;        local SkillTypes = {&#10;            ['axe'] = {type = 'axe', skill = $axe, skillpc = $axepc},&#10;            ['club'] = {type = 'club', skill = $club, skillpc = $clubpc},&#10;            ['sword'] = {type = 'sword', skill = $sword, skillpc = $swordpc},&#10;            ['bow'] = {type = 'distance', skill = $distance, skillpc = $distancepc},&#10;            ['distance weapon'] = {type = 'distance', skill = $distance, skillpc = $distancepc},&#10;            ['no weapon'] = {type = 'fist', skill = $fist, skillpc = $fistpc},&#10;            ['rod'] = {type = 'magic', skill = $mlevel, skillpc = $mlevelpc},&#10;            ['wand'] = {type = 'magic', skill = $mlevel, skillpc = $mlevelpc},&#10;        }&#10;&#10;        return SkillTypes[findweapontype()]&#10;    end&#10;&#10;    local Moving, Temp, Moved = false, {0, 0}, {0, 0}&#10;&#10;    function inputevents(e)&#10;        if (e.type == IEVENT_LMOUSEDOWN) then&#10;            for _, Section in ipairs(HUD_Sections) do&#10;                if (e.elementid == Section.StateSwitch) then&#10;                    Section.State = not Section.State&#10;                    return&#10;                end&#10;            end&#10;        for _, Section in ipairs(HUD_Sections) do&#10;                if (Section.Name == 'ENGINE STATES') then&#10;                    for _, SectionItem in ipairs(Section.Items) do&#10;                        if (e.elementid == SectionItem[4]) then&#10;                            SectionItem[3]()&#10;                            return&#10;                        end&#10;                    end&#10;                end&#10;            end&#10;        end&#10;&#10;        if (e.type == IEVENT_MMOUSEDOWN) then&#10;            Moving, Temp = true, {$cursor.x - Moved[1], $cursor.y - Moved[2]}&#10;        end&#10;&#10;        if (e.type == IEVENT_MMOUSEUP) then&#10;            Moving = false&#10;        end&#10;    end&#10;    &#10;    setmaskcolorxp(0)&#10;init end&#10;&#10;if (Moving) then&#10;    auto(10)&#10;    Moved = {$cursor.x - Temp[1], $cursor.y - Temp[2]}&#10;end&#10;&#10;setposition($clientwin.left + 5 + Moved[1], $worldwin.top + Moved[2])&#10;setfontstyle('Tahoma', 8, 75, 0xFFFFFF, 1, color(0, 0, 0, 20))&#10;&#10;local YPosition, SectionRow, SectionItemsRow = 0, 0, 0&#10;&#10;if MMS.ShowInfo then&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 22)&#10;    addgradcolors(unpack(HUD_Colors.SectionHeaderBackground))&#10;    drawroundrect(0, 0, 240, 21, 2, 2)&#10;    drawtext(MMS.Title, 6, 21 / 2 - StringHeight * 0.5)&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 22)&#10;    addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;    drawroundrect(130, 0, 110, 21, 2, 2)&#10;    drawtext(MMS.Creator, 136, 21 / 2 - StringHeight * 0.5)&#10;&#10;    setfontsize(7)&#10;&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;    drawroundrect(0, 24 + 0 * 18, 240, 15, 2, 2)&#10;    drawtext(MMS.Info, 6, 24 + 0 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;     &#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;    drawroundrect(0, 24 + 1 * 18, 240, 15, 2, 2)&#10;    drawtext('Script version:', 6, 24 + 1 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;     &#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#10;    addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;    drawroundrect(130, 24 + 1 * 18, 110, 15, 2, 2)&#10;    drawtext(MMS.Version, 136, 24 + 1 * 18 + 15 / 2 - StringHeight * 0.5 + 1)&#10;    &#10;    YPosition = 22 + 2 * 19&#10;end&#10;&#10;for SectionIndex, Section in ipairs(HUD_Sections) do&#10;    setfontsize(8)&#10;&#10;    local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#10;    addgradcolors(unpack(HUD_Colors.SectionHeaderBackground))&#10;    drawroundrect(0, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 240, 20, 2, 2)&#10;    drawtext(Section.Name, 6, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 20 / 2 - StringHeight * 0.5 + 1)&#10;&#10;    setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#10;    if (Section.State) then&#10;        addgradcolors(unpack(HUD_Colors.EntryValueEnabledBackground))&#10;    else&#10;        addgradcolors(unpack(HUD_Colors.EntryValueDisabledBackground))&#10;    end&#10;    Section.StateSwitch = drawroundrect(220, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 20, 20, 2, 2)&#10;    drawtext('X', 228, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 20 / 2 - StringHeight * 0.5 + 1)&#10;&#10;    SectionRow = SectionRow + 1&#10;&#10;    if (Section.State) then&#10;        setfontsize(7)&#10;&#10;        local StringWidth, StringHeight = measurestring('TEMP')&#10;&#10;        for SectionItemIndex, SectionItem in ipairs(Section.Items) do&#10;            setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)     &#10;            addgradcolors(unpack(HUD_Colors.EntryNameBackground))&#10;            drawroundrect(0, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 240, 16, 2, 2)&#10;            drawtext(SectionItem[1], 6, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;&#10;            if (Section.Name == 'ENGINE STATES') then&#10;                local EngineCurrentState = SectionItem[2]()&#10;&#10;                setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)&#10;                if (EngineCurrentState == 'yes') then&#10;                    addgradcolors(unpack(HUD_Colors.EntryValueEnabledBackground))&#10;                else&#10;                    addgradcolors(unpack(HUD_Colors.EntryValueDisabledBackground))&#10;                end&#10;                HUD_Sections[SectionIndex].Items[SectionItemIndex][4] = drawroundrect(130, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 110, 16, 2, 2)&#10;&#10;&#10;                drawtext((EngineCurrentState == 'yes' and ('On')) or ('Off'), 136, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;            else&#10;                setfillstyle('gradient', 'linear', 2, 0, 0, 0, 17)&#10;                addgradcolors(unpack(HUD_Colors.EntryValueBackground))&#10;                drawroundrect(130, YPosition + (SectionRow * 23) + (SectionItemsRow * 19), 110, 16, 2, 2)&#10;                drawtext(SectionItem[2](), 136, YPosition + (SectionRow * 23) + (SectionItemsRow * 19) + 16 / 2 - StringHeight * 0.5 + 1)&#10;            end&#10;&#10;            SectionItemsRow = SectionItemsRow + 1&#10;        end&#10;    end&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="RecentLoot" script="init start&#10;&#9;-- SCRIPT_VERSION = '1.1.1'&#10;&#9;local warnItems = {'fire sword', 'boots of haste', 'wand of inferno'} -- you can add more items here&#10;&#9;local maxMsgs = 5 -- max lines to display at once&#10;&#9;local msgTimeOut = 30000 -- will only show loots from the last 30 seconds&#10;&#10;&#9;local position = 'left' -- right or left&#10;&#9;local rareLootColor = 0xCE7C4E&#10;&#9;local lootColor = 0x2DA357&#10;&#10;&#9;-- dont edit anything below this line&#10;&#9;local fontsize = 7&#10;&#9;local fontspacing = fontsize + 6&#10;&#9;local isRight = (position == 'right')&#10;&#9;local msgs = {}&#10;&#10;&#9;setfontstyle(&quot;Tahoma&quot;, fontsize, 75, lootColor, 1, 0x002200)&#10;&#9;setmaskcolorxp(0)&#10;init end&#10;&#10;foreach newmessage m do&#10;&#9;if m.level == 0 and m.content:sub(0,8) == 'Loot of ' then&#10;&#9;&#9;local msgInfo = m.content:lootmsg()&#10;&#9;&#9;local color = lootColor&#10;&#9;&#9;local hasItems = false&#10;&#10;&#9;&#9;local msg = msgInfo.name .. ': '&#10;&#10;&#9;&#9;local lastIndex = #msgInfo.items&#10;&#9;&#9;for index, item in ipairs(msgInfo.items) do&#10;&#9;&#9;&#9;hasItems = true&#10;&#10;&#9;&#9;&#9;if (item.count &gt; 1) then&#10;&#9;&#9;&#9;&#9;msg = msg .. item.count .. ' '&#10;&#9;&#9;&#9;end&#10;&#9;&#9;&#9;msg = msg .. item.name&#10;&#9;&#9;&#9;if index ~= lastIndex then&#10;&#9;&#9;&#9;&#9;msg = msg .. ', '&#10;&#9;&#9;&#9;end&#10;&#10;&#9;&#9;&#9;if table.find(warnItems, item.name) then&#10;&#9;&#9;&#9;&#9;color = rareLootColor&#10;&#9;&#9;&#9;end&#10;&#9;&#9;end&#10;&#10;&#9;&#9;if (hasItems) then&#10;&#9;&#9;&#9;local msgWidth = measurestring(msg)&#10;&#9;&#9;&#9;table.insert(msgs, {['msg'] = msg, ['color'] = color, ['time'] = $timems, ['width'] = msgWidth})&#10;&#9;&#9;end&#10;&#9;end&#10;end&#10;&#10;local msgsLen = #msgs&#10;local longestLine = 0&#10;if isRight then&#10;&#9;for index = msgsLen, math.max(msgsLen - maxMsgs + 1, 1), -1 do&#10;&#9;&#9;if msgs[index].width &gt; longestLine then longestLine = msgs[index].width end&#10;&#9;end&#10;end&#10;&#10;local i = 1&#10;while (i &lt;= msgsLen) do&#10;&#9;if $timems - msgs[i].time &lt;= msgTimeOut and i &gt; msgsLen - maxMsgs then&#10;&#9;&#9;setfontcolor(msgs[i].color)&#10;&#9;&#9;addtext(msgs[i].msg, tern(isRight, longestLine - msgs[i].width + 2, 2), i*fontspacing)&#10;&#10;&#9;&#9;i = i + 1&#10;&#9;else&#10;&#9;&#9;table.remove(msgs, i)&#10;&#9;end&#10;&#10;&#9;msgsLen = #msgs&#10;end&#10;&#10;if not isRight then&#10;&#9;setposition($worldwin.left + 3, $worldwin.bottom - i*fontspacing)&#10;else&#10;&#9;setposition($worldwin.right - 3 - longestLine, $worldwin.bottom - i*fontspacing)&#10;end&#10;&#10;if msgsLen == 0 then -- to clear HUD when resetting script&#10;&#9;addtext('', 0, 0)&#10;end" enabled="yes" refreshRate="100"/>
+            <HUDScript name="MonitorMyHunting" script="init start&#13;&#10;&#9;--&#13;&#10;&#9;--                        88                                                                  &#13;&#10;&#9;--                        &quot;&quot;                                                ,d                &#13;&#10;&#9;--                                                                          88                &#13;&#10;&#9;--             ,adPPYba,  88  8b,dPPYba,  88,dPYba,,adPYba,   ,adPPYYba,  MM88MMM  ,adPPYba,  &#13;&#10;&#9;--             I8[    &quot;&quot;  88  88P'   &quot;Y8  88P'   &quot;88&quot;    &quot;8a  &quot;&quot;     `Y8    88    a8P_____88  &#13;&#10;&#9;--              `&quot;Y8ba,   88  88          88      88      88  ,adPPPPP88    88    8PP&quot;&quot;&quot;&quot;&quot;&quot;&quot;  &#13;&#10;&#9;--             aa    ]8I  88  88          88      88      88  88,    ,88    88,   &quot;8b,   ,aa  &#13;&#10;&#9;--   Author:   `&quot;YbbdP&quot;'  88  88          88      88      88  `&quot;8bbdP&quot;Y8    &quot;Y888  `&quot;Ybbd8&quot;'  &#13;&#10;&#9;--   &#13;&#10;&#9;--   Monitor My Hunting!&#13;&#10;&#9;--&#13;&#10;&#9;--   Version: 1.0&#13;&#10;&#9;--   Created: 29.12.2013&#13;&#10;&#9;--   Last update: 29.12.2013&#13;&#10;&#9;--&#13;&#10;&#13;&#10;&#9;local MMH = {&#13;&#10;&#9;&#9;SHOW_ALL_ITEMS = false,&#13;&#10;&#9;&#9;SHOW_ALL_SUPPLIES = false,&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;-- [[ Do not change anything below this line. ]] --&#13;&#10;&#13;&#10;&#9;-- [[ COLORS ]] --&#13;&#10;&#9;MMH.COLORS = {}&#13;&#10;&#9;MMH.COLORS.FONT_COLOR = color(255, 255, 255, 0)&#13;&#10;&#9;MMH.COLORS.SECTION_HEADER_BACKGROUND = {0.0, color(36, 68, 105, 20), 0.23, color(39, 73, 114, 20), 0.76, color(21, 39, 60, 20)}&#13;&#10;&#9;MMH.COLORS.ENTRY_NAME_BACKGROUND = {0.0, color(75, 75, 75, 20), 0.23, color(45, 45, 45, 20), 0.76, color(19, 19, 19, 20)}&#13;&#10;&#9;MMH.COLORS.ENTRY_VALUE_BACKGROUND = {0.0, color(145, 95, 0, 20), 0.23, color(158, 104, 0, 20), 0.76, color(84, 55, 0, 20)}&#13;&#10;&#9;MMH.COLORS.RESULT_POSITIVE_BACKGROUND = {0.0, color(65, 96, 12, 20), 0.23, color(67, 99, 13, 20), 0.76, color(36, 52, 6, 20)}&#13;&#10;&#9;MMH.COLORS.RESULT_NEGATIVE_BACKGROUND = {0.0, color(90, 12, 15, 20), 0.23, color(98, 13, 17, 20), 0.76, color(52, 6, 9, 20)}&#13;&#10;&#9;MMH.COLORS.RESET_BUTTON_BACKGROUND = MMH.COLORS.RESULT_POSITIVE_BACKGROUND&#13;&#10;&#13;&#10;&#9;-- [[ ELEMENTS ]] --&#13;&#10;&#9;MMH.ELEMENTS = {}&#13;&#10;&#9;MMH.ELEMENTS.RESET_BUTTON = -1&#13;&#10;&#9;MMH.ELEMENTS.SWITCH_ITEMS_LOOTED = -1&#13;&#10;&#9;MMH.ELEMENTS.SWITCH_SUPPLIES_USED = -1&#13;&#10;&#13;&#10;&#9;-- [[ SECTION STATES ]] --&#13;&#10;&#9;MMH.SECTIONS = {}&#13;&#10;&#9;MMH.SECTIONS.ITEMS_LOOTED = true&#13;&#10;&#9;MMH.SECTIONS.SUPPLIES_USED = true&#13;&#10;&#13;&#10;&#9;-- [[ OTHERS ]] --&#9;&#13;&#10;&#9;filterinput(false, true, false, false)&#13;&#10;&#13;&#10;&#9;local MOVING, TEMP, MOVED = false, {0, 0}, {0, 0}&#13;&#10;&#13;&#10;&#9;function inputevents(e)&#13;&#10;&#9;&#9;if (e.type == IEVENT_LMOUSEDOWN) then&#13;&#10;&#9;&#9;&#9;if (e.elementid == MMH.ELEMENTS.RESET_BUTTON) then&#13;&#10;&#9;&#9;&#9;&#9;resetcharactertime()&#13;&#10;&#9;&#9;&#9;&#9;resetlootcounter()&#13;&#10;&#9;&#9;&#9;&#9;resetexpcounter()&#13;&#10;&#9;&#9;&#9;elseif (e.elementid == MMH.ELEMENTS.SWITCH_ITEMS_LOOTED) then&#13;&#10;&#9;&#9;&#9;&#9;MMH.SECTIONS.ITEMS_LOOTED = not MMH.SECTIONS.ITEMS_LOOTED&#13;&#10;&#9;&#9;&#9;elseif (e.elementid == MMH.ELEMENTS.SWITCH_SUPPLIES_USED) then&#13;&#10;&#9;&#9;&#9;&#9;MMH.SECTIONS.SUPPLIES_USED = not MMH.SECTIONS.SUPPLIES_USED&#13;&#10;&#9;&#9;&#9;end&#13;&#10;&#9;&#9;end&#13;&#10;&#13;&#10;&#9;&#9;if (e.type == IEVENT_MMOUSEDOWN) then&#13;&#10;&#9;&#9;&#9;MOVING, TEMP = true, {$cursor.x - MOVED[1], $cursor.y - MOVED[2]}&#13;&#10;&#9;&#9;end&#13;&#10;&#13;&#10;&#9;&#9;if (e.type == IEVENT_MMOUSEUP) then&#13;&#10;&#9;&#9;&#9;MOVING = false&#13;&#10;&#9;&#9;end&#13;&#10;&#9;end&#13;&#10;&#13;&#10;&#9;setmaskcolorxp(0)&#13;&#10;init end&#13;&#10;&#13;&#10;if (MOVING) then&#13;&#10;    auto(10)&#13;&#10;    MOVED = {$cursor.x - TEMP[1], $cursor.y - TEMP[2]}&#13;&#10;end&#13;&#10;&#13;&#10;setposition($clientwin.right - 424 + MOVED[1], $worldwin.top + MOVED[2])&#13;&#10;setfontstyle('Tahoma', 8, 75, MMH.COLORS.FONT_COLOR, 1, color(0, 0, 0, 20))&#13;&#10;&#13;&#10;local ROW_QUANTITY, STRING_WIDTH, STRING_HEIGHT = 0, measurestring('TEMP')&#13;&#10;local ITEMS_LOOTED_WORTH, ITEM_LOOTED_QUANTITY, ITEM_LOOTED_WORTH = 0, 0, 0&#13;&#10;local SUPPLIES_USED_WORTH, SUPPLY_USED_QUANTITY, SUPPLY_USED_WORTH = 0, 0, 0&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;drawroundrect(0, 0, 240, 20, 2, 2)&#13;&#10;drawtext('Monitor My Hunting v1.0', 6, 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;addgradcolors(unpack(MMH.COLORS.RESET_BUTTON_BACKGROUND))&#13;&#10;MMH.ELEMENTS.RESET_BUTTON = drawroundrect(196, 0, 44, 20, 2, 2)&#13;&#10;drawtext('RESET', 202, 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfontsize(7)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;drawroundrect(0, 23, 240, 15, 2, 2)&#13;&#10;drawtext('Looting Accuracy', 6, 23 + 15 / 2 - STRING_HEIGHT * 0.5 + 1)&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;addgradcolors(unpack(MMH.COLORS.ENTRY_VALUE_BACKGROUND))&#13;&#10;drawroundrect(130, 23, 110, 15, 2, 2)&#13;&#10;drawtext(string.format('%.2f', $lootaccuracy) .. '%', 136, 23 + 15 / 2 - STRING_HEIGHT * 0.5 + 1)&#13;&#10;&#13;&#10;setfontsize(8)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;addgradcolors(unpack(MMH.COLORS.SECTION_HEADER_BACKGROUND))&#13;&#10;drawroundrect(0, 41, 240, 20, 2, 2)&#13;&#10;drawtext('ITEMS LOOTED', 6, 41 + 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;if (MMH.SECTIONS.ITEMS_LOOTED) then&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_POSITIVE_BACKGROUND))&#13;&#10;else&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_NEGATIVE_BACKGROUND))&#13;&#10;end&#13;&#10;MMH.ELEMENTS.SWITCH_ITEMS_LOOTED = drawroundrect(220, 41, 20, 20, 2, 2)&#13;&#10;drawtext('X', 228, 41 + 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfontsize(7)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;foreach lootingitem ItemEntry do&#13;&#10;&#9;if (MMH.SHOW_ALL_ITEMS or ItemEntry.amountlooted &gt; 0) then&#13;&#10;&#9;&#9;ITEM_LOOTED_QUANTITY = ItemEntry.amountlooted&#13;&#10;&#9;&#9;ITEM_LOOTED_WORTH = ItemEntry.sellprice * ITEM_LOOTED_QUANTITY&#13;&#10;&#13;&#10;&#9;&#9;if (MMH.SECTIONS.ITEMS_LOOTED) then&#13;&#10;&#9;&#9;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;&#9;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;&#9;&#9;&#9;drawroundrect(0, 64 + ROW_QUANTITY * 18, 240, 15, 2, 2)&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;&#9;setcompositionmode(CompositionMode_SourceOver)&#13;&#10;&#9;&#9;&#9;drawitem(ItemEntry.id, 6, 64 + ROW_QUANTITY * 18, 50, 100)&#13;&#10;&#9;&#9;&#9;setcompositionmode(CompositionMode_Automatic)&#13;&#10;&#13;&#10;&#9;&#9;&#9;drawtext(((#ItemEntry.name &gt; 16 and string.match(string.sub(ItemEntry.name, 1, 16), '(.-)%s?$') .. '...') or ItemEntry.name):capitalizeall(), 28, 64 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;&#9;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;&#9;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_VALUE_BACKGROUND))&#13;&#10;&#9;&#9;&#9;drawroundrect(130, 64 + ROW_QUANTITY * 18, 110, 15, 2, 2)&#13;&#10;&#9;&#9;&#9;drawtext(num(ITEM_LOOTED_QUANTITY) .. ' (' .. math.floor(ITEM_LOOTED_WORTH / 100) / 10 .. 'K)', 136, 64 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;&#9;&#9;ROW_QUANTITY = ROW_QUANTITY + 1&#13;&#10;&#9;&#9;end&#13;&#10;&#13;&#10;&#9;&#9;ITEMS_LOOTED_WORTH = ITEMS_LOOTED_WORTH + ITEM_LOOTED_WORTH&#13;&#10;&#9;end&#13;&#10;end&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;drawroundrect(0, 64 + ROW_QUANTITY * 18, 240, 15, 2, 2)&#13;&#10;drawtext('Total: ' .. num(ITEMS_LOOTED_WORTH) .. ' GPs', 6, 64 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;ROW_QUANTITY = ROW_QUANTITY + 1&#13;&#10;&#13;&#10;setfontsize(8)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;addgradcolors(unpack(MMH.COLORS.SECTION_HEADER_BACKGROUND))&#13;&#10;drawroundrect(0, 64 + ROW_QUANTITY * 18, 240, 20, 2, 2)&#13;&#10;drawtext('SUPPLIES USED', 6, 64 + ROW_QUANTITY * 18 + 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;if (MMH.SECTIONS.SUPPLIES_USED) then&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_POSITIVE_BACKGROUND))&#13;&#10;else&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_NEGATIVE_BACKGROUND))&#13;&#10;end&#13;&#10;MMH.ELEMENTS.SWITCH_SUPPLIES_USED = drawroundrect(220, 64 + ROW_QUANTITY * 18, 20, 20, 2, 2)&#13;&#10;drawtext('X', 228, 64 + ROW_QUANTITY * 18 + 20 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;setfontsize(7)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;foreach supplyitem ItemEntry do&#13;&#10;&#9;if (MMH.SHOW_ALL_SUPPLIES or ItemEntry.amountused &gt; 0) then&#13;&#10;&#9;&#9;SUPPLY_USED_QUANTITY = ItemEntry.amountused&#13;&#10;&#9;&#9;SUPPLY_USED_WORTH = ItemEntry.buyprice * SUPPLY_USED_QUANTITY&#13;&#10;&#13;&#10;&#9;&#9;if (MMH.SECTIONS.SUPPLIES_USED) then&#13;&#10;&#9;&#9;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;&#9;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;&#9;&#9;&#9;drawroundrect(0, 87 + ROW_QUANTITY * 18, 240, 15, 2, 2)&#13;&#10;&#13;&#10;&#9;&#9;&#9;setcompositionmode(CompositionMode_SourceOver)&#13;&#10;&#9;&#9;&#9;drawitem(ItemEntry.id, 6, 87 + ROW_QUANTITY * 18, 50, 100)&#13;&#10;&#9;&#9;&#9;setcompositionmode(CompositionMode_Automatic)&#13;&#10;&#13;&#10;&#9;&#9;&#9;drawtext(((#ItemEntry.name &gt; 16 and string.match(string.sub(ItemEntry.name, 1, 16), '(.-)%s?$') .. '...') or ItemEntry.name):capitalizeall(), 28, 87 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;&#9;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;&#9;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_VALUE_BACKGROUND))&#13;&#10;&#9;&#9;&#9;drawroundrect(130, 87 + ROW_QUANTITY * 18, 110, 15, 2, 2)&#13;&#10;&#9;&#9;&#9;drawtext(num(SUPPLY_USED_QUANTITY) .. ' (' .. math.floor(SUPPLY_USED_WORTH / 100) / 10 .. 'K)', 136, 87 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;&#9;&#9;ROW_QUANTITY = ROW_QUANTITY + 1&#13;&#10;&#9;&#9;end&#13;&#10;&#13;&#10;&#9;&#9;SUPPLIES_USED_WORTH = SUPPLIES_USED_WORTH + SUPPLY_USED_WORTH&#13;&#10;&#9;end&#13;&#10;end&#13;&#10;&#13;&#10;if (MMH.SECTIONS.SUPPLIES_USED) then&#13;&#10;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;&#9;drawroundrect(0, 87 + ROW_QUANTITY * 18, 240, 15, 2, 2)&#13;&#10;&#13;&#10;&#9;setcompositionmode(CompositionMode_SourceOver)&#13;&#10;&#9;drawitem(3031, 6, 87 + ROW_QUANTITY * 18, 50, 100)&#13;&#10;&#9;setcompositionmode(CompositionMode_Automatic)&#13;&#10;&#13;&#10;&#9;drawtext('Money Spent', 28, 87 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.ENTRY_VALUE_BACKGROUND))&#13;&#10;&#9;drawroundrect(130, 87 + ROW_QUANTITY * 18, 110, 15, 2, 2)&#13;&#10;&#9;drawtext(num($moneyspent) .. ' (' .. math.floor($moneyspent / 100) / 10 .. 'K)', 136, 87 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;&#9;ROW_QUANTITY = ROW_QUANTITY + 1&#13;&#10;end&#13;&#10;&#13;&#10;SUPPLIES_USED_WORTH = SUPPLIES_USED_WORTH + $moneyspent&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 16)&#13;&#10;addgradcolors(unpack(MMH.COLORS.ENTRY_NAME_BACKGROUND))&#13;&#10;drawroundrect(0, 87 + ROW_QUANTITY * 18, 240, 15, 2, 2)&#13;&#10;drawtext('Total: ' .. num(SUPPLIES_USED_WORTH) .. ' GPs', 6, 87 + ROW_QUANTITY * 18 + 15 / 2 - STRING_HEIGHT * 0.5)&#13;&#10;&#13;&#10;ROW_QUANTITY = ROW_QUANTITY + 1&#13;&#10;&#13;&#10;setfontsize(8)&#13;&#10;&#13;&#10;STRING_WIDTH, STRING_HEIGHT = measurestring('TEMP')&#13;&#10;&#13;&#10;setfillstyle('gradient', 'linear', 2, 0, 0, 0, 21)&#13;&#10;if (ITEMS_LOOTED_WORTH &gt;= SUPPLIES_USED_WORTH) then&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_POSITIVE_BACKGROUND))&#13;&#10;else&#13;&#10;&#9;addgradcolors(unpack(MMH.COLORS.RESULT_NEGATIVE_BACKGROUND))&#13;&#10;end&#13;&#10;drawroundrect(0, 87 + ROW_QUANTITY * 18, 240, 20, 2, 2)&#13;&#10;drawtext(((ITEMS_LOOTED_WORTH &gt;= SUPPLIES_USED_WORTH and ('PROFIT: ')) or ('WASTE: ')) .. num(ITEMS_LOOTED_WORTH - SUPPLIES_USED_WORTH) .. ' GPs (' .. math.abs(math.floor(((ITEMS_LOOTED_WORTH - SUPPLIES_USED_WORTH) * 3600) / ($charactertime / 1000) / 100) / 10) .. ' k/h)', 6, 87 + ROW_QUANTITY * 18 + 20 / 2 - STRING_HEIGHT * 0.5)" enabled="yes" refreshRate="100"/>
+            <HUDScript name="ActiveHotkeys" script="init start&#13;&#10;&#9;-- local SCRIPT_VERSION = '1.0.1'&#13;&#10;&#9;&#13;&#10;&#9;local types = {&quot;hotkey&quot;, &quot;persistent&quot;, &quot;cavebot&quot;}&#13;&#10;&#9;local fontsize = 7&#13;&#10;&#9;local fontspacing = fontsize + 6&#13;&#10;&#9;&#13;&#10;&#9;setfontstyle(&quot;Tahoma&quot;, fontsize, 99, 0xE4B31B, 1)&#13;&#10;&#9;setmaskcolorxp(0)&#13;&#10;init end&#13;&#10;&#13;&#10;local row = 0&#13;&#10;for _,scripttype in ipairs(types) do&#13;&#10;&#9;local i = 0&#13;&#10;&#9;while isscript(scripttype, i) do&#13;&#10;&#9;&#9;local listname = scriptlistname(scripttype, i)&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;if listname ~= &quot;&quot; then&#13;&#10;&#9;&#9;&#9;setfontcolor(scriptlistcolor(scripttype, i))&#13;&#10;&#9;&#9;&#9;drawtext(listname, 2, 2 + row*fontspacing)&#13;&#10;&#9;&#9;&#9;row = row + 1&#13;&#10;&#9;&#9;end&#13;&#10;&#9;&#9;&#13;&#10;&#9;&#9;i = i + 1&#13;&#10;&#9;end&#13;&#10;end&#13;&#10;&#13;&#10;setposition($clientwin.left + 7, $worldwin.bottom - row*fontspacing - 1)" enabled="yes" refreshRate="100"/>
+        </HUDScripts>
+    </HUDs>
+    <GeneralSettings>
+        <Input>
+            <MouseOption mouseMode="Simulate Mouse"/>
+            <MouseOption scrollMode="Use mouse wheel"/>
+            <MouseOption stuckCursorPolicy="If Cavebot on, Release Instantly"/>
+            <MouseOption moveSpeed="7"/>
+            <MouseOption clickWaitMin="100" clickWaitMax="150"/>
+            <KeyboardOption keyboardMode="Simulate Keyboard"/>
+            <KeyboardOption stuckCtrlShiftPolicy="If Cavebot on, Release Instantly"/>
+            <KeyboardOption typeWaitMin="110" typeWaitMax="140"/>
+            <KeyboardOption pressWaitMin="100" pressWaitMax="250"/>
+            <FocusOption focusPolicy="Don't auto-focus"/>
+            <FocusOption openMenuPolicy="Confirm if cavebotting"/>
+        </Input>
+    </GeneralSettings>
+    <Alerts disableSounds="yes">
+        <alert name="Player On Screen" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Player Attacking" playSound="yes" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Monster Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Private Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Default Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="GM Detected" playSound="yes" pauseBot="no" logout="no"/>
+        <alert name="Disconnected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Character Stuck" playSound="no" pauseBot="no" logout="no" standTime="30000"/>
+        <alert name="Health Below" playSound="no" pauseBot="no" logout="no" healthPercent="50"/>
+        <alert name="Mana Below" playSound="no" pauseBot="no" logout="no" manaPercent="50"/>
+        <alert name="Unjust Kill" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Enemies Online" playSound="no" pauseBot="no" logout="no" enemiesCount="50"/>
+    </Alerts>
+    <Cavebot enabled="no">
+        <Options>
+            <Option shovel="3457"/>
+            <Option rope="3003"/>
+            <Option machete="3308"/>
+            <Option pick="3456"/>
+            <Option nodeRange="2"/>
+            <Option pauseBotOnDeath="yes"/>
+            <Option refillAmmo="no" refillAmmoMin="30" refillAmmoMax="70"/>
+            <Option autoMount="no"/>
+            <Option fireAvoidanceMin="15" fireAvoidanceMax="20"/>
+            <Option energyAvoidanceMin="15" energyAvoidanceMax="20"/>
+            <Option poisonAvoidanceMin="15" poisonAvoidanceMax="20"/>
+            <Option walkThroughPlayers="no"/>
+            <Option walkMethod="Walk With Arrow Keys"/>
+            <Option walkableItems=""/>
+            <Option mapWalkDistMin="20" mapWalkDistMax="30"/>
+            <Option userOptionsScript=""/>
+        </Options>
+        <SpecialAreas/>
+        <CavebotScripts/>
+        <WaypointSection name="Hunt">
+            <Waypoint type="Node" x="32722" y="31293" z="7" rangeX="2" rangeY="2"/>
+            <Waypoint type="Node" x="32735" y="31301" z="7" rangeX="2" rangeY="2"/>
+            <Waypoint type="Stand" x="32738" y="31301" z="7" rangeX="1" rangeY="1" label="elves"/>
+            <Waypoint type="Stand" x="32740" y="31299" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32750" y="31301" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32752" y="31301" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32752" y="31301" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32753" y="31288" z="7" rangeX="1" rangeY="1" label="downarc"/>
+            <Waypoint type="Stand" x="32753" y="31287" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32753" y="31292" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32753" y="31292" z="9" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32753" y="31287" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32753" y="31288" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel(&quot;downarc&quot;,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32760" y="31292" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32757" y="31296" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32757" y="31296" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32763" y="31286" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32766" y="31290" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32766" y="31290" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32764" y="31275" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32771" y="31279" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32771" y="31279" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32753" y="31274" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32753" y="31278" z="7" rangeX="1" rangeY="1" label="diffElv" script="--difficulty elven&#10;if(difficulty == 1) then&#10;gotolabel('skipElv')&#10;end"/>
+            <Waypoint type="Stand" x="32752" y="31278" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32752" y="31278" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32752" y="31279" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32745" y="31287" z="7" rangeX="1" rangeY="1" label="skipElv"/>
+            <Waypoint type="Stand" x="32744" y="31285" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32745" y="31285" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32741" y="31297" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32740" y="31299" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32739" y="31301" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32740" y="31304" z="7" rangeX="1" rangeY="1" label="minos"/>
+            <Waypoint type="Stand" x="32740" y="31307" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32735" y="31328" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32740" y="31310" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32740" y="31307" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32740" y="31305" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32712" y="31292" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32712" y="31279" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32713" y="31278" z="7" rangeX="1" rangeY="1" label="orcs"/>
+            <Waypoint type="Action" x="32713" y="31278" z="7" rangeX="1" rangeY="1" label="opendoor" script="--opendoor&#10;if not islocation(3) then&#10;&#9;gotolabel('minos','Hunt')&#10;end&#10;if islocation(1) then&#10;     usedoor(32713, 31277, 7, &quot;open&quot;)&#10;     waitping()&#10;end"/>
+            <Waypoint type="Node" x="32724" y="31257" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32741" y="31250" z="7" rangeX="1" rangeY="1" label="rightorc"/>
+            <Waypoint type="Action" x="32741" y="31250" z="7" rangeX="1" rangeY="1" label="diffOrc1" script="--difficulty orc1&#10;if(difficulty == 1) then&#10;gotolabel('skipOrc1')&#10;end"/>
+            <Waypoint type="Ladder" x="32743" y="31250" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Lure" x="32745" y="31251" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32742" y="31250" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32742" y="31250" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32743" y="31250" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32743" y="31250" z="7" rangeX="1" rangeY="1" label="chkright" script="if $wptz ~= $posz then&#10;gotolabel(&quot;rightorc&quot;,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32720" y="31261" z="7" rangeX="1" rangeY="1" label="skipOrc1"/>
+            <Waypoint type="Node" x="32711" y="31262" z="7" rangeX="1" rangeY="1" label="leftorc"/>
+            <Waypoint type="Action" x="32711" y="31262" z="7" rangeX="1" rangeY="1" label="diffOrc2" script="--difficulty orc2&#10;if(difficulty == 1) then&#10;gotolabel('skipOrc2')&#10;end"/>
+            <Waypoint type="Ladder" x="32709" y="31264" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Lure" x="32710" y="31264" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32709" y="31263" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32709" y="31263" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32709" y="31264" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32709" y="31264" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel(&quot;leftorc&quot;,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32714" y="31274" z="7" rangeX="1" rangeY="1" label="skipOrc2"/>
+            <Waypoint type="Stand" x="32713" y="31276" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32713" y="31276" z="7" rangeX="1" rangeY="1" label="opendoor" script="--opendoor&#10;if not islocation(3) then&#10;&#9;gotolabel($wptid-1)&#10;end&#10;if islocation(1) then&#10;     usedoor(32713, 31277, 7, &quot;open&quot;)&#10;     waitping()&#10;end"/>
+            <Waypoint type="Node" x="32694" y="31277" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32678" y="31283" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32666" y="31292" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32671" y="31291" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32671" y="31291" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32676" y="31294" z="7" rangeX="1" rangeY="1" label="nomads"/>
+            <Waypoint type="Ladder" x="32675" y="31292" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32675" y="31292" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32680" y="31296" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32680" y="31296" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32675" y="31292" z="7" rangeX="1" rangeY="1" label="checknomads" script="if not islocation(6) then&#10;gotolabel(&quot;nomads&quot;,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32666" y="31302" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32683" y="31314" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32689" y="31321" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32707" y="31329" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32714" y="31338" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32720" y="31344" z="7" rangeX="1" rangeY="1" label="diffDwarf" script="--difficulty dwarf&#10;if(difficulty == 1) then&#10;gotolabel('skipDwarf')&#10;end"/>
+            <Waypoint type="Stand" x="32721" y="31344" z="7" rangeX="1" rangeY="1" label="indwarf"/>
+            <Waypoint type="Stand" x="32721" y="31344" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32721" y="31345" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel(&quot;indwarf&quot;,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32724" y="31350" z="7" rangeX="1" rangeY="1" label="skipDwarf"/>
+            <Waypoint type="Stand" x="32733" y="31349" z="7" rangeX="1" rangeY="1" label="lizards"/>
+            <Waypoint type="Stand" x="32733" y="31349" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32734" y="31349" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32705" y="31329" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32700" y="31323" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32700" y="31323" z="7" rangeX="1" rangeY="1" label="diffMonks" script="--difficulty monks&#10;if(difficulty == 1) then&#10;gotolabel('skipMonks')&#10;end"/>
+            <Waypoint type="Stand" x="32705" y="31322" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32705" y="31321" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32705" y="31321" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32706" y="31321" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Stand" x="32707" y="31326" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32707" y="31326" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32707" y="31325" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32697" y="31316" z="7" rangeX="1" rangeY="1" label="skipMonks"/>
+            <Waypoint type="Stand" x="32695" y="31306" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32695" y="31306" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32695" y="31305" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Action" x="32695" y="31305" z="7" rangeX="1" rangeY="1" script="if needresupply(50,'a') then&#10;gotolabel(&quot;startDepositer&quot;,&quot;Depositer&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32698" y="31304" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32698" y="31304" z="7" rangeX="1" rangeY="1" label="valks"/>
+            <Waypoint type="Action" x="32698" y="31305" z="6" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Stand" x="32698" y="31307" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32708" y="31300" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32708" y="31298" z="6" rangeX="1" rangeY="1" label="assassinvalk"/>
+            <Waypoint type="Stand" x="32708" y="31298" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32708" y="31298" z="6" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 2,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32698" y="31298" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32697" y="31284" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32700" y="31276" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32700" y="31266" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32699" y="31266" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32699" y="31267" z="7" rangeX="1" rangeY="1" script="if $wptz ~= $posz then&#10;gotolabel($wptid - 5,&quot;Hunt&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32694" y="31280" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32708" y="31292" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32721" y="31293" z="7" rangeX="1" rangeY="1" label="checkSupply" script="if needresupply(50, 'a') then&#10;gotolabel(0,'Depositer')&#10;end"/>
+        </WaypointSection>
+        <WaypointSection name="Depositer">
+            <Waypoint type="Node" x="32735" y="31277" z="7" rangeX="1" rangeY="1" label="startDepositer"/>
+            <Waypoint type="Node" x="32749" y="31261" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32752" y="31259" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32752" y="31257" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32761" y="31251" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32763" y="31251" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32764" y="31251" z="7" rangeX="1" rangeY="1" label="checkPosition" script="if not islocation(1) then&#10;gotolabel(0,&quot;Depositer&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32780" y="31247" z="7" rangeX="1" rangeY="1" label="depot"/>
+            <Waypoint type="Action" x="32780" y="31247" z="7" rangeX="1" rangeY="1" script=" depotaction('maindpbp', 'rarebp', {'s','raredpbp','n','raredpbpn'})"/>
+            <Waypoint type="Node" x="32801" y="31247" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32819" y="31248" z="7" rangeX="1" rangeY="1" label="bank"/>
+            <Waypoint type="Node" x="32824" y="31254" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32826" y="31248" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32825" y="31247" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32825" y="31247" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32825" y="31248" z="7" rangeX="1" rangeY="1" script="if islocation() then&#10;depositerbank('a')&#10;waitping()&#10;&#10;-- open bps&#10;local mainBp = getlootingdestination('mainbp')&#10;local goldBp = getlootingdestination('goldbp')&#10;local rareBp = getlootingdestination('rarebp')&#10;local rareBpn = getlootingdestination('rarebpn')&#10;&#10;closewindows()&#10;wait(500,1000)&#10;while windowcount() &lt; 4&#10;do&#10;closewindows()&#10;wait(500,1000)&#10;openitem($back.id, &quot;back&quot;)&#10;wait(500,1000)&#10;minimizewindows('equip')waitping()&#10;resizewindows()waitping()&#10;openitem(goldBp, itemname($back.id), true)&#10;wait(500,1000)&#10;resizewindows()&#10;openitem(rareBp, itemname($back.id), true)&#10;wait(500,1000)&#10;resizewindows()&#10;openitem(rareBpn, itemname($back.id), true)&#10;wait(500,1000)&#10;resizewindows()&#10;end&#10;else&#10;gotolabel(&quot;bank&quot;,&quot;Depositer&quot;)&#10;end"/>
+            <Waypoint type="Node" x="32790" y="31232" z="7" rangeX="1" rangeY="1" label="potCheck"/>
+            <Waypoint type="Action" x="32790" y="31233" z="7" rangeX="1" rangeY="1" label="checkPots" script="gotolabel(0,&quot;Repot&quot;)&#10;"/>
+        </WaypointSection>
+        <WaypointSection name="Repot">
+            <Waypoint type="Stand" x="32790" y="31239" z="7" rangeX="1" rangeY="1" label="startRepot"/>
+            <Waypoint type="Stand" x="32789" y="31239" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32789" y="31238" z="5" rangeX="1" rangeY="1" label="PotShop" script="if not islocation(1) then&#10;gotolabel(&quot;potCheck&quot;,&quot;Depositer&quot;)&#10;end&#10;&#10;resupply('a')&#10;waitping()"/>
+            <Waypoint type="Stand" x="32789" y="31239" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32790" y="31239" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32790" y="31240" z="7" rangeX="1" rangeY="1" script="if islocation() then&#10;&#9;if needresupply(50,'a') then&#10;&#9;&#9;gotolabel(&quot;bank&quot;,&quot;Depositer&quot;)&#10;&#9;else&#10;&#9;&#9;gotolabel(0,&quot;BackToHunt&quot;)&#10;&#9;end&#10;else&#10;&#9;gotolabel(0,&quot;Repot&quot;)&#10;end"/>
+        </WaypointSection>
+        <WaypointSection name="BackToHunt">
+            <Waypoint type="Node" x="32772" y="31242" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32764" y="31247" z="7" rangeX="2" rangeY="2"/>
+            <Waypoint type="Stand" x="32763" y="31251" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32761" y="31251" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32753" y="31254" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32750" y="31254" z="5" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32748" y="31254" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32734" y="31277" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32734" y="31277" z="7" rangeX="1" rangeY="1" label="end" script="if islocation(3) then&#10;gotolabel(0,&quot;Hunt&quot;)&#10;else&#10;gotolabel(0,'BackToHunt')&#10;end"/>
+        </WaypointSection>
+    </Cavebot>
+    <Looting enabled="yes">
+        <Options>
+            <Option range="10"/>
+            <Option moveItemsQuickly="yes"/>
+            <Option eatFoodFromCorpse="yes"/>
+            <Option openNextBP="yes"/>
+            <Option openBPsAtLogin="no"/>
+            <Option valuableBodies="3000"/>
+            <Option ultraValuableBodies="50000"/>
+            <Option alertOnValuableBodies="no"/>
+            <Option openValuableBodiesOnly="no"/>
+            <Option openUltraValuableBodiesImmediately="no"/>
+            <Option policy="Smart Looting"/>
+            <LootingDestinations>
+                <lootingDestination name="mainbp" destination="brown backpack"/>
+                <lootingDestination name="goldbp" destination="yellow backpack"/>
+                <lootingDestination name="rarebp" destination="golden backpack"/>
+                <lootingDestination name="maindpbp" destination="fur backpack"/>
+                <lootingDestination name="raredpbp" destination="camouflage backpack"/>
+                <lootingDestination name="rarebpn" destination="purple backpack"/>
+                <lootingDestination name="raredpbpn" destination="green backpack"/>
+            </LootingDestinations>
+        </Options>
+        <LootingProfile name="LootList" isCurrentProfile="yes">
+            <LootItem name="gold coin" id="3031" sellPrice="1" weight="0.10" destinationName="goldbp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="g" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="yellow gem" id="3037" sellPrice="1000" weight="0.30" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="elven astral observer" id="11465" sellPrice="90" weight="1.12" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="wand of cosmic energy" id="3073" sellPrice="2000" weight="25.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="elven scouting glass" id="11464" sellPrice="50" weight="0.80" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="elvish bow" id="7438" sellPrice="2000" weight="39.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="elvish talisman" id="9635" sellPrice="45" weight="1.10" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="holy orchid" id="5922" sellPrice="90" weight="2.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="heaven blossom" id="5921" sellPrice="50" weight="2.10" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="plum" id="8011" sellPrice="0" weight="1.30" destinationName="mainbp" action="Loot" lootCondition="Has Less than" lootConditionValue="10" itemCategory="f" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="small diamond" id="3028" sellPrice="300" weight="0.10" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="small emerald" id="3032" sellPrice="250" weight="0.10" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="small ruby" id="3030" sellPrice="250" weight="0.10" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="deer trophy" id="7397" sellPrice="3000" weight="5.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="lizard leather" id="5876" sellPrice="150" weight="0.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="seeds" id="647" sellPrice="150" weight="0.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="safety pin" id="11493" sellPrice="120" weight="0.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="bast skirt" id="3560" sellPrice="750" weight="3.50" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="lizard scale" id="5881" sellPrice="120" weight="0.80" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="orc tooth" id="10196" sellPrice="150" weight="1.00" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="cyclops trophy" id="7398" sellPrice="500" weight="5.00" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="dwarven ring" id="3097" sellPrice="100" weight="1.10" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="dirty turban" id="11456" sellPrice="120" weight="1.34" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="book of prayers" id="9646" sellPrice="120" weight="1.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="voodoo doll" id="3002" sellPrice="400" weight="6.50" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="wand of decay" id="3072" sellPrice="1000" weight="23.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="leopard armor" id="3404" sellPrice="1000" weight="95.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="templar scytheblade" id="3345" sellPrice="200" weight="29.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="obsidian lance" id="3313" sellPrice="500" weight="80.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="ripper lance" id="3346" sellPrice="500" weight="80.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="dark helmet" id="3384" sellPrice="250" weight="46.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="iron helmet" id="3353" sellPrice="150" weight="30.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="salamander shield" id="3445" sellPrice="280" weight="59.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="halberd" id="3269" sellPrice="400" weight="90.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="plate armor" id="3357" sellPrice="400" weight="120.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="rope belt" id="11492" sellPrice="66" weight="0.97" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="broken helmet" id="11453" sellPrice="20" weight="1.56" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="skull belt" id="11480" sellPrice="80" weight="1.16" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="nomad parchment" id="7533" sellPrice="0" weight="2.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="mana potion" id="268" sellPrice="0" weight="2.70" destinationName="mainbp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="m" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="strong mana potion" id="237" sellPrice="0" weight="2.90" destinationName="mainbp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="m" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="health potion" id="266" sellPrice="0" weight="2.70" destinationName="mainbp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="m" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="life crystal" id="3061" sellPrice="85" weight="2.63" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="broken shamanic staff" id="11452" sellPrice="35" weight="1.28" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="orc leather" id="11479" sellPrice="30" weight="0.50" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="dark rosary" id="10303" sellPrice="48" weight="0.90" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="protective charm" id="11444" sellPrice="60" weight="1.20" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="shamanic hood" id="11478" sellPrice="45" weight="0.90" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="cyclops toe" id="9657" sellPrice="55" weight="1.11" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="orcish gear" id="11477" sellPrice="85" weight="1.80" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="horseman helmet" id="3405" sellPrice="280" weight="42.00" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="steel helmet" id="3351" sellPrice="293" weight="46.00" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="rusty armor (rare)" id="8896" sellPrice="0" weight="120.00" destinationName="rarebp" action="Loot" lootCondition="Has Cap to Loot" itemCategory="s" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="crystal necklace" id="3008" sellPrice="400" weight="4.90" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="tribal mask" id="3403" sellPrice="250" weight="25.00" destinationName="rarebpn" action="Loot" lootCondition="Has Cap to Loot" itemCategory="n" alertOnDrop="no" alertOnMiss="no"/>
+        </LootingProfile>
+    </Looting>
+    <Supplies>
+        <Options>
+            <Option defaultBackpack=""/>
+            <Option extraCashMin="0" extraCashMax="0"/>
+            <Option autoSwitchProfiles="no"/>
+        </Options>
+        <SupplyProfile name="SupplyList" vocation="Knight" level="33" isCurrentProfile="yes">
+            <SupplyItem name="health potion" id="266" buyPrice="45" weight="2.70" leaveCaveAt="10" rule="Up to..." ruleValue="15" destinationName="mainbp" category="a"/>
+            <SupplyItem name="mana potion" id="268" buyPrice="50" weight="2.70" leaveCaveAt="10" rule="Up to..." ruleValue="80" destinationName="mainbp" category="a"/>
+        </SupplyProfile>
+    </Supplies>
+    <Targeting enabled="yes" allowDiagonalMovement="yes" autoSwitchProfiles="no" nonPvPMode="no">
+        <TargetingProfile name="TargetList" vocation="Knight" level="31" targetMustBeShootable="no" targetMustBeReachable="yes" isCurrentProfile="yes">
+            <Priorities>
+                <Priority health="20"/>
+                <Priority proximity="30"/>
+                <Priority danger="10"/>
+                <Priority random="0"/>
+                <Priority lure="30"/>
+                <Priority stick="2"/>
+            </Priorities>
+            <Creatures>
+                <Creature name="others" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Approach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Elf" amount="Any" category="e" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Elf Scout" amount="Any" category="e" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="10" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Elf Arcanist" amount="Any" category="e" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="9" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Orc" amount="Any" category="o" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Orc Warrior" amount="Any" category="o" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Orc Berserker" amount="Any" category="o" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="10" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Lure &amp; Stand" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Orc Shaman" amount="Any" category="o" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Orc Spearman" amount="Any" category="o" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Assassin" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Approach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Dark Monk" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Approach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Gang Member" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Crazed Beggar" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Bandit" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Smuggler" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="cat" amount="Any" category="i" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Snake" amount="Any" category="i" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Dworc Fleshhunter" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Dworc Venomsniper" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Dworc Voodoomaster" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Cyclops" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Approach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Nomad" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Amazon" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Poacher" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Lizard Sentinel" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Lizard Templar" amount="Any" category="h" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+            </Creatures>
+        </TargetingProfile>
+    </Targeting>
+    <OtherBots>
+        <HealingPaths/>
+        <TargetingPaths/>
+    </OtherBots>
+</WindbotSettings>

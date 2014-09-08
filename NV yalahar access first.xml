@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindbotSettings>
+    <Healer>
+        <SpellHealer enabled="no"/>
+        <PotionHealer enabled="no"/>
+        <ConditionHealer enabled="no"/>
+        <ManaTrainer manaTrainCondition="Mana Percent above" manaTrainMin="87" manaTrainMax="93" enabled="no"/>
+    </Healer>
+    <Scripter>
+        <HotkeyScripts/>
+        <PersistentScripts/>
+    </Scripter>
+    <HUDs>
+        <HUDScripts/>
+    </HUDs>
+    <GeneralSettings>
+        <Input>
+            <MouseOption mouseMode="Simulate Mouse"/>
+            <MouseOption scrollMode="Use mouse wheel"/>
+            <MouseOption stuckCursorPolicy="If Cavebot on, Release Instantly"/>
+            <MouseOption moveSpeed="9"/>
+            <MouseOption clickWaitMin="100" clickWaitMax="150"/>
+            <KeyboardOption keyboardMode="Simulate Keyboard"/>
+            <KeyboardOption stuckCtrlShiftPolicy="If Cavebot on, Release Instantly"/>
+            <KeyboardOption typeWaitMin="110" typeWaitMax="140"/>
+            <KeyboardOption pressWaitMin="100" pressWaitMax="250"/>
+            <FocusOption focusPolicy="Don't auto-focus"/>
+            <FocusOption openMenuPolicy="Confirm if cavebotting"/>
+        </Input>
+    </GeneralSettings>
+    <Alerts disableSounds="no">
+        <alert name="Player On Screen" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Player Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Monster Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Private Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Default Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="GM Detected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Disconnected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Character Stuck" playSound="no" pauseBot="no" logout="no" standTime="30000"/>
+        <alert name="Health Below" playSound="no" pauseBot="no" logout="no" healthPercent="50"/>
+        <alert name="Mana Below" playSound="no" pauseBot="no" logout="no" manaPercent="50"/>
+        <alert name="Unjust Kill" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Enemies Online" playSound="no" pauseBot="no" logout="no" enemiesCount="50"/>
+    </Alerts>
+    <Cavebot enabled="yes">
+        <Options>
+            <Option shovel="3457"/>
+            <Option rope="3003"/>
+            <Option machete="3308"/>
+            <Option pick="3456"/>
+            <Option nodeRange="4"/>
+            <Option pauseBotOnDeath="yes"/>
+            <Option refillAmmo="no" refillAmmoMin="30" refillAmmoMax="70"/>
+            <Option autoMount="no"/>
+            <Option fireAvoidanceMin="15" fireAvoidanceMax="20"/>
+            <Option energyAvoidanceMin="15" energyAvoidanceMax="20"/>
+            <Option poisonAvoidanceMin="15" poisonAvoidanceMax="20"/>
+            <Option walkThroughPlayers="no"/>
+            <Option walkMethod="Walk With Arrow Keys"/>
+            <Option walkableItems=""/>
+            <Option mapWalkDistMin="20" mapWalkDistMax="30"/>
+            <Option userOptionsScript="{ &quot;type&quot;: &quot;scriptinfo&quot;, &quot;name&quot;: &quot;Yalahar access by Tobiasx&quot;, &quot;text&quot;: &quot;Access to yalahar by Tobiasx!&quot;, &quot;version&quot;: &quot;1.0&quot; },&#10;{ &quot;type&quot; : &quot;group&quot;, &quot;name&quot; : &quot;huntlocation&quot;, &quot;text&quot; : &quot;Where do you start?&quot;, &quot;column&quot; : 1, &quot;children&quot; : [ { &quot;type&quot; : &quot;combobox&quot;, &quot;name&quot; : &quot;spawn&quot;, &quot;text&quot; : &quot;Location&quot;, &quot;description&quot; : &quot;Where do you start?&quot;, &quot;items&quot; : [&quot;Thais DP&quot;, &quot;Darashia DP&quot;, &quot;Edron DP&quot;, &quot;Venore DP&quot;, &quot;Port hope boat&quot;] } ] }"/>
+        </Options>
+        <SpecialAreas/>
+        <CavebotScripts/>
+        <WaypointSection name="START HERE">
+            <Waypoint type="Action" x="33176" y="31764" z="6" rangeX="1" rangeY="1" label="Start here" script="if getuseroption('spawn') == 'Darashia DP' &#10;then gotolabel('Darashia_dp', 'Depot') end&#10; &#10;if getuseroption('spawn') == 'Thais DP' &#10;then gotolabel('Thais_dp', 'Depot') end &#10;&#10;if getuseroption('spawn') == 'Venore DP' &#10;then gotolabel('Venore_dp', 'Depot') end &#10;&#10;if getuseroption('spawn') == 'Edron DP' &#10;then gotolabel('Edron_dp', 'Depot') end&#10;&#10;if getuseroption('spawn') == 'Port hope Boat' &#10;then gotolabel('porthopepickaxestart', 'PorthopePickaxe') end"/>
+        </WaypointSection>
+        <WaypointSection name="Depot">
+            <Waypoint type="Node" x="33213" y="32458" z="8" rangeX="1" rangeY="1" label="Darashia_dp"/>
+            <Waypoint type="Walk" x="33214" y="32455" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33218" y="32450" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33233" y="32458" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33267" y="32460" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33281" y="32469" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33291" y="32472" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="33293" y="32473" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33289" y="32481" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="33289" y="32481" z="6" rangeX="1" rangeY="1" script="if $followed.id == 0 then&#10;follow('Petros') wait(300, 500)&#10;end&#10;wait(1500,2000)&#10;say('hi')wait(1500,2000)&#10;npcsay('port hope')wait(1500,2000)&#10;npcsay('yes')wait(1500,2000)&#10;&#10;gotolabel('Porthopepickaxestart', 'PorthopePickaxe')"/>
+            <Waypoint type="Node" x="32344" y="32224" z="7" rangeX="1" rangeY="1" label="Thais_dp"/>
+            <Waypoint type="Stand" x="32322" y="32213" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32321" y="32211" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32311" y="32211" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32311" y="32211" z="6" rangeX="1" rangeY="1" script="if $followed.id == 0 then&#10;follow('Captain Bluebear') wait(300, 500)&#10;end&#10;wait(1500,2000)&#10;say('hi')wait(1500,2000)&#10;npcsay('port hope')wait(1500,2000)&#10;npcsay('yes')wait(1500,2000)&#10;&#10;gotolabel('Porthopepickaxestart', 'PorthopePickaxe')"/>
+            <Waypoint type="Node" x="32928" y="32076" z="7" rangeX="1" rangeY="1" label="Venore_dp"/>
+            <Waypoint type="Walk" x="32935" y="32075" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32953" y="32032" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32954" y="32022" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32954" y="32022" z="6" rangeX="1" rangeY="1" script="if $followed.id == 0 then&#10;follow('Captain Fearless') wait(300, 500)&#10;end&#10;wait(1500,2000)&#10;say('hi')wait(1500,2000)&#10;npcsay('port hope')wait(1500,2000)&#10;npcsay('yes')wait(1500,2000)&#10;&#10;gotolabel('Porthopepickaxestart', 'PorthopePickaxe')"/>
+            <Waypoint type="Walk" x="33169" y="31808" z="9" rangeX="1" rangeY="1" label="Edron_dp"/>
+            <Waypoint type="Walk" x="33169" y="31812" z="8" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33201" y="31817" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33175" y="31775" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="33175" y="31775" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33176" y="31764" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="33176" y="31764" z="6" rangeX="1" rangeY="1" script="if $followed.id == 0 then&#10;follow('Captain Seahorse') wait(300, 500)&#10;end&#10;wait(1500,2000)&#10;say('hi')wait(1500,2000)&#10;npcsay('port hope')wait(1500,2000)&#10;npcsay('yes')wait(1500,2000)&#10;&#10;gotolabel('Porthopepickaxestart', 'PorthopePickaxe')"/>
+        </WaypointSection>
+        <WaypointSection name="PorthopePickaxe">
+            <Waypoint type="Node" x="32533" y="32778" z="6" rangeX="1" rangeY="1" label="Porthopepickaxestart"/>
+            <Waypoint type="Node" x="32543" y="32786" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32552" y="32787" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32557" y="32767" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32568" y="32767" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="32578" y="32766" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32595" y="32768" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32601" y="32761" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32618" y="32761" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32629" y="32754" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32648" y="32753" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32658" y="32752" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32663" y="32744" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32669" y="32737" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="32671" y="32732" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32671" y="32732" z="7" rangeX="1" rangeY="1" script="say ('hi') wait(700, 1000) &#10;npcsay ('explorer society') wait(700, 1000)&#10;npcsay ('join') wait(700, 1000) &#10;npcsay ('yes') wait(700, 1000)&#10;npcsay ('dwarven pickaxe') wait(700, 1000)&#10;npcsay ('yes')"/>
+            <Waypoint type="Node" x="32669" y="32742" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32658" y="32753" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32641" y="32755" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32628" y="32762" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32601" y="32762" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32586" y="32769" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="32578" y="32766" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32566" y="32767" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32557" y="32780" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="32530" y="32784" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="32529" y="32784" z="6" rangeX="1" rangeY="1" script="say ('hi') wait(700, 1000)&#10;npcsay ('edron') wait(700, 1000)&#10;npcsay ('yes') wait(700,1000)&#10;&#10;gotolabel('Edronqueststart', 'EdronQuest')"/>
+        </WaypointSection>
+        <WaypointSection name="EdronQuest">
+            <Waypoint type="Node" x="33175" y="31771" z="6" rangeX="1" rangeY="1" label="Edronqueststart"/>
+            <Waypoint type="Walk" x="33175" y="31775" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33197" y="31791" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33201" y="31819" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33217" y="31841" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33243" y="31841" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="33247" y="31841" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33270" y="31834" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="33270" y="31834" z="6" rangeX="1" rangeY="1" script="if $followed.id == 0 then&#10;follow('Wyrdin') wait(300, 500)&#10;end&#10;wait(1500,2000)&#10;say('hi')wait(1500,2000)&#10;npcsay('mission')wait(1500,2000)&#10;"/>
+            <Waypoint type="Node" x="33256" y="31834" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33249" y="31841" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Walk" x="33247" y="31841" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33203" y="31843" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33200" y="31808" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Node" x="33176" y="31777" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Ladder" x="33175" y="31775" z="7" rangeX="1" rangeY="1"/>
+            <Waypoint type="Stand" x="33176" y="31764" z="6" rangeX="1" rangeY="1"/>
+            <Waypoint type="Action" x="33176" y="31764" z="6" rangeX="1" rangeY="1" script="setsetting('Cavebot/Enabled', 'no')"/>
+        </WaypointSection>
+    </Cavebot>
+    <Looting enabled="no">
+        <Options>
+            <Option range="10"/>
+            <Option moveItemsQuickly="yes"/>
+            <Option eatFoodFromCorpse="yes"/>
+            <Option openNextBP="no"/>
+            <Option openBPsAtLogin="no"/>
+            <Option valuableBodies="3000"/>
+            <Option ultraValuableBodies="50000"/>
+            <Option alertOnValuableBodies="no"/>
+            <Option openValuableBodiesOnly="no"/>
+            <Option openUltraValuableBodiesImmediately="no"/>
+            <Option policy="Smart Looting"/>
+            <LootingDestinations/>
+        </Options>
+        <LootingProfile name="LootList" isCurrentProfile="yes"/>
+    </Looting>
+    <Supplies>
+        <Options>
+            <Option defaultBackpack=""/>
+            <Option extraCashMin="1000" extraCashMax="2500"/>
+            <Option autoSwitchProfiles="no"/>
+        </Options>
+        <SupplyProfile name="SupplyList" vocation="Knight" level="95" isCurrentProfile="yes"/>
+    </Supplies>
+    <Targeting enabled="no" allowDiagonalMovement="no" autoSwitchProfiles="no" nonPvPMode="no">
+        <TargetingProfile name="TargetList" vocation="Knight" level="95" targetMustBeShootable="no" targetMustBeReachable="yes" isCurrentProfile="yes">
+            <Priorities>
+                <Priority health="20"/>
+                <Priority proximity="30"/>
+                <Priority danger="10"/>
+                <Priority random="0"/>
+                <Priority lure="30"/>
+                <Priority stick="2"/>
+            </Priorities>
+            <Creatures/>
+        </TargetingProfile>
+    </Targeting>
+    <OtherBots>
+        <HealingPaths/>
+        <TargetingPaths/>
+    </OtherBots>
+</WindbotSettings>

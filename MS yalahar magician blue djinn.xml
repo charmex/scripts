@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindbotSettings>
+    <Healer>
+        <SpellHealer enabled="yes">
+            <HealRule name="NewHealRule" spell="Light Healing" condition="Health Percent below" conditionMin="80" conditionMax="80" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="500" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+            <HealRule name="NewHealRule1" spell="Intense Healing" condition="Health Percent below" conditionMin="50" conditionMax="50" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="500" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+            <HealRule name="NewHealRule2" spell="Ultimate Healing" condition="Health Percent below" conditionMin="30" conditionMax="30" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="500" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </SpellHealer>
+        <PotionHealer enabled="yes"/>
+        <ConditionHealer enabled="yes"/>
+        <ManaTrainer manaTrainCondition="Mana Percent above" manaTrainMin="87" manaTrainMax="93" enabled="no"/>
+    </Healer>
+    <Scripter>
+        <HotkeyScripts/>
+        <PersistentScripts/>
+    </Scripter>
+    <HUDs>
+        <HUDScripts/>
+    </HUDs>
+    <GeneralSettings>
+        <Input>
+            <MouseOption mouseMode="Simulate Mouse"/>
+            <MouseOption scrollMode="Use mouse wheel"/>
+            <MouseOption stuckCursorPolicy="If Cavebot on, Release Instantly"/>
+            <MouseOption moveSpeed="Instantaneous"/>
+            <MouseOption clickWaitMin="30" clickWaitMax="60"/>
+            <KeyboardOption keyboardMode="Simulate Keyboard"/>
+            <KeyboardOption stuckCtrlShiftPolicy="If Cavebot on, Release Instantly"/>
+            <KeyboardOption typeWaitMin="30" typeWaitMax="60"/>
+            <KeyboardOption pressWaitMin="30" pressWaitMax="60"/>
+            <FocusOption focusPolicy="Don't auto-focus"/>
+            <FocusOption openMenuPolicy="Confirm if cavebotting"/>
+        </Input>
+    </GeneralSettings>
+    <Alerts disableSounds="no">
+        <alert name="Player On Screen" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Player Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Monster Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Private Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Default Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="GM Detected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Disconnected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Character Stuck" playSound="no" pauseBot="no" logout="no" standTime="30000"/>
+        <alert name="Health Below" playSound="no" pauseBot="no" logout="no" healthPercent="50"/>
+        <alert name="Mana Below" playSound="no" pauseBot="no" logout="no" manaPercent="50"/>
+        <alert name="Unjust Kill" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Enemies Online" playSound="no" pauseBot="no" logout="no" enemiesCount="50"/>
+    </Alerts>
+    <Cavebot enabled="no">
+        <Options>
+            <Option shovel="5710"/>
+            <Option rope="646"/>
+            <Option machete="3308"/>
+            <Option pick="3456"/>
+            <Option nodeRange="4"/>
+            <Option pauseBotOnDeath="yes"/>
+            <Option refillAmmo="no" refillAmmoMin="30" refillAmmoMax="70"/>
+            <Option autoMount="yes"/>
+            <Option fireAvoidanceMin="15" fireAvoidanceMax="20"/>
+            <Option energyAvoidanceMin="15" energyAvoidanceMax="20"/>
+            <Option poisonAvoidanceMin="15" poisonAvoidanceMax="20"/>
+            <Option walkThroughPlayers="yes"/>
+            <Option walkMethod="Walk With Arrow Keys"/>
+            <Option walkableItems=""/>
+            <Option mapWalkDistMin="20" mapWalkDistMax="30"/>
+            <Option userOptionsScript=""/>
+        </Options>
+        <SpecialAreas/>
+        <CavebotScripts/>
+        <WaypointSection name="Waypoints"/>
+    </Cavebot>
+    <Looting enabled="yes">
+        <Options>
+            <Option range="10"/>
+            <Option moveItemsQuickly="yes"/>
+            <Option eatFoodFromCorpse="yes"/>
+            <Option openNextBP="no"/>
+            <Option openBPsAtLogin="no"/>
+            <Option valuableBodies="3000"/>
+            <Option ultraValuableBodies="50000"/>
+            <Option alertOnValuableBodies="no"/>
+            <Option openValuableBodiesOnly="no"/>
+            <Option openUltraValuableBodiesImmediately="no"/>
+            <Option policy="Smart Looting"/>
+            <LootingDestinations/>
+        </Options>
+        <LootingProfile name="LootList" isCurrentProfile="yes"/>
+    </Looting>
+    <Supplies>
+        <Options>
+            <Option defaultBackpack=""/>
+            <Option extraCashMin="1000" extraCashMax="2500"/>
+            <Option autoSwitchProfiles="no"/>
+        </Options>
+        <SupplyProfile name="SupplyList" vocation="Knight, Paladin, Sorcerer, Druid" level="0" isCurrentProfile="yes"/>
+    </Supplies>
+    <Targeting enabled="yes" allowDiagonalMovement="yes" autoSwitchProfiles="no" nonPvPMode="no">
+        <TargetingProfile name="TargetList" vocation="Knight, Paladin, Sorcerer, Druid" level="0" targetMustBeShootable="no" targetMustBeReachable="yes" isCurrentProfile="yes">
+            <Priorities>
+                <Priority health="20"/>
+                <Priority proximity="30"/>
+                <Priority danger="10"/>
+                <Priority random="0"/>
+                <Priority lure="30"/>
+                <Priority stick="2"/>
+            </Priorities>
+            <Creatures>
+                <Creature name="dragon lord" amount="3+" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="Avalanche Rune" secondSpell="Strong Ice Strike" thirdSpell="Ice Strike" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="dragon lord" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="Strong Ice Strike" secondSpell="Ice Strike" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Dragon" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="Strong Ice Strike" secondSpell="Ice Strike" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+            </Creatures>
+        </TargetingProfile>
+    </Targeting>
+    <OtherBots>
+        <HealingPaths/>
+        <TargetingPaths/>
+    </OtherBots>
+</WindbotSettings>

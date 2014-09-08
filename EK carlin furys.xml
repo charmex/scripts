@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindbotSettings>
+    <Healer>
+        <SpellHealer enabled="yes">
+            <HealRule name="Exura Ico" spell="Wound Cleansing" condition="Health Percent below" conditionMin="66" conditionMax="70" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="400" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </SpellHealer>
+        <PotionHealer enabled="yes">
+            <HealRule name="SHP" spell="Strong Health Potion" condition="Health Percent below" conditionMin="38" conditionMax="40" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="400" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+            <HealRule name="MP" spell="Mana Potion" condition="Mana Percent below" conditionMin="47" conditionMax="50" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="400" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </PotionHealer>
+        <ConditionHealer enabled="yes">
+            <HealRule name="Anti Paralyze High Hp" spell="Wound Cleansing" condition="Paralyzed" conditionMin="0" conditionMax="0" extraCondition="No Extra Condition" extraConditionMin="0" extraConditionMax="0" enabled="yes" spamMin="200" spamMax="400" triggerKey="&lt;no key&gt;" dontOverrideActions="no"/>
+        </ConditionHealer>
+        <ManaTrainer manaTrainCondition="Mana Percent above" manaTrainMin="87" manaTrainMax="93" enabled="yes"/>
+    </Healer>
+    <Scripter>
+        <HotkeyScripts>
+            <HotkeyScript name="Showbot" script="showbot()&#10;wait(2000)" triggerKey="Shift + F11" hotkeyTriggerMode="0"/>
+            <HotkeyScript name="PauseHotkey" script="if not $cavebot or not $targeting then&#13;&#10;    listas('Enabling Cavebot and Targeting')&#13;&#10;    setcavebot('on')&#13;&#10;    settargeting('on')&#13;&#10;    wait(1000)&#13;&#10;else&#13;&#10;    listas('Disabling Cavebot and Targeting')&#13;&#10;    setcavebot('off')&#13;&#10;    settargeting('off')&#13;&#10;    stopattack()&#13;&#10;    wait(1000)&#13;&#10;end" triggerKey="Pause" hotkeyTriggerMode="0"/>
+        </HotkeyScripts>
+        <PersistentScripts>
+            <PersistentScript name="SetupScript_ib" script="-------- Script setup -------- &#10;usemount = false  --true if you want to use mount (true/false)&#10;usesoftboots = false --true if you want to use soft boots (true/false)&#10;&#10;-------- Backpack setup -------- &#10;&#10;mainbp = &quot;brown backpack&quot;           --your main backpack name&#10;lootbp = &quot;golden backpack&quot;  --your backpack for loot&#10;goldbp = &quot;yellow backpack&quot;      --your backpack for gold coins&#10;suppliebp = &quot;purple backpack&quot;    --your backpack for supplies&#10;&#10;maindpbp = &quot;fur backpack&quot;  --backpack in depo &#10;lootdpbp = &quot;green backpack&quot;  --backpack for non-stackable loot&#10;stackdpbp = &quot;camouflage backpack&quot;  --backpack for stackable loot&#10;&#10;-------- Supplies setup -------- &#10;&#10;mananame = &quot;mana potion&quot;  --name of your mana potion&#10;manaamount = 200                  --amount of mana potion to buy&#10;manaprice = 50                   --price of mana potion&#10;&#10;healthname = &quot;health potion&quot; --name of health potions&#10;healthamount = 50                  --amount of health potions to buy &#10;healthprice = 50                  --price of health potion&#10;&#10;manaleave = 50                   --amount of ammunition to leave resp&#10;capleave = 120                    --cap to leave resp&#10;healthleave = 20                --amount of health to leave&#10;-------------------------------------------------------------------" enabled="yes"/>
+            <PersistentScript name="Safebanker" script="auto(800, 1000)&#10;-- NPC name&#10;local npcname = 'Eva'&#10;&#10;local index = 0 &#10;&#10;foreach newmessage msgs &quot;NPCs&quot; do&#10;   if msgs.sender == npcname and msgs.text:find('There is not enough gold on your account.') then&#10;      setcavebot('off')&#10;      wait(5000,10000)&#10;      closeclient()&#10;   end&#10;end" enabled="yes"/>
+            <PersistentScript name="Usesoftbootschecker" script="auto(800, 1000)&#10;if usesoftboots &#10;then &#10;setsetting(&quot;Persistent/Scripts/Softbootschanger/Enabled&quot;, &quot;yes&quot;)&#10;else&#10;setsetting(&quot;Persistent/Scripts/Softbootschanger/Enabled&quot;, &quot;no&quot;)&#10;end" enabled="no"/>
+            <PersistentScript name="Usemountchecker" script="auto(800, 1000)&#10;if usemount&#10;then &#10;setsetting(&quot;Cavebot/AutoMount&quot;, &quot;yes&quot;)&#10;else&#10;setsetting(&quot;Cavebot/AutoMount&quot;, &quot;no&quot;)&#10;end" enabled="no"/>
+            <PersistentScript name="Drop vials" script="auto(800, 1000)&#10;if (maround_ib(7) &lt; 1) and itemcount(284, 'all') &gt; 30 or itemcount(283, 'all') &gt; 30 or itemcount(285, 'all') &gt; 30 then&#10;moveitems(283,&quot;ground&quot;)&#10;moveitems(284,&quot;ground&quot;)&#10;moveitems(285,&quot;ground&quot;)&#10;end" enabled="no"/>
+        </PersistentScripts>
+    </Scripter>
+    <HUDs>
+        <HUDScripts/>
+    </HUDs>
+    <GeneralSettings>
+        <Input>
+            <MouseOption mouseMode="Simulate Mouse"/>
+            <MouseOption scrollMode="Use mouse wheel"/>
+            <MouseOption stuckCursorPolicy="If Cavebot on, Release Instantly"/>
+            <MouseOption moveSpeed="9"/>
+            <MouseOption clickWaitMin="30" clickWaitMax="50"/>
+            <KeyboardOption keyboardMode="Simulate Keyboard"/>
+            <KeyboardOption stuckCtrlShiftPolicy="If Cavebot on, Release after 1 sec"/>
+            <KeyboardOption typeWaitMin="75" typeWaitMax="140"/>
+            <KeyboardOption pressWaitMin="45" pressWaitMax="65"/>
+            <FocusOption focusPolicy="Don't auto-focus"/>
+            <FocusOption openMenuPolicy="Confirm if cavebotting"/>
+        </Input>
+    </GeneralSettings>
+    <Alerts disableSounds="no">
+        <alert name="Player On Screen" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Player Attacking" playSound="yes" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Monster Attacking" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Private Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="Default Message" playSound="no" pauseBot="no" logout="no" safeList="&lt;SafeList&gt;&#10;"/>
+        <alert name="GM Detected" playSound="yes" pauseBot="yes" logout="no"/>
+        <alert name="Disconnected" playSound="no" pauseBot="no" logout="no"/>
+        <alert name="Character Stuck" playSound="no" pauseBot="no" logout="no" standTime="30000"/>
+        <alert name="Health Below" playSound="no" pauseBot="no" logout="no" healthPercent="50"/>
+        <alert name="Mana Below" playSound="no" pauseBot="no" logout="no" manaPercent="50"/>
+        <alert name="Unjust Kill" playSound="yes" pauseBot="no" logout="no"/>
+        <alert name="Enemies Online" playSound="no" pauseBot="no" logout="no" enemiesCount="50"/>
+    </Alerts>
+    <Cavebot enabled="no">
+        <Options>
+            <Option shovel="3457"/>
+            <Option rope="3003"/>
+            <Option machete="3308"/>
+            <Option pick="3456"/>
+            <Option nodeRange="4"/>
+            <Option pauseBotOnDeath="yes"/>
+            <Option refillAmmo="no" refillAmmoMin="30" refillAmmoMax="70"/>
+            <Option autoMount="yes"/>
+            <Option fireAvoidanceMin="0" fireAvoidanceMax="0"/>
+            <Option energyAvoidanceMin="0" energyAvoidanceMax="0"/>
+            <Option poisonAvoidanceMin="0" poisonAvoidanceMax="0"/>
+            <Option walkThroughPlayers="no"/>
+            <Option walkMethod="Walk With Map-Clicks"/>
+            <Option walkableItems="140, 404, 831, 832, 833, 834, 883, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2131, 2132, 2133, 2134, 2135, 2314, 2315, 2316, 2319, 2346, 2347, 2348, 2349, 2350, 2351, 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365, 2366, 2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383, 2384, 2385, 2418, 2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2431, 2432, 2433, 2434, 2441, 2442, 2443, 2444, 2469, 2471, 2472, 2473, 2478, 2480, 2481, 2482, 2483, 2484, 2485, 2486, 2519, 2523, 2775, 2776, 2777, 2778, 2779, 2780, 2781, 2782, 2783, 2784, 2785, 2786, 2787, 2788, 2789, 2790, 2791, 2792, 2793, 2794, 2795, 2796, 2797, 2798, 2799, 2800, 2801, 2802, 2803, 2804, 2805, 2806, 2807, 2808, 2809, 2810, 2811, 2812, 2981, 2982, 2983, 2984, 2985, 2987, 2988, 3503, 3504, 3514, 3807, 5086, 5087, 5088, 6114, 6115, 6355, 6356, 6357, 6358, 6359, 6360, 6361, 6362, 6371, 6372, 7864, 8455, 8763, 9061, 9062, 10207, 10209, 10216, 10286, 10287, 10288, 11009, 11800, 11801, 11802, 11803, 11804, 11805, 11806, 11807, 11808, 11809, 11810, 17974, 17975, 17977"/>
+            <Option mapWalkDistMin="20" mapWalkDistMax="50"/>
+            <Option userOptionsScript=""/>
+        </Options>
+        <SpecialAreas/>
+        <CavebotScripts/>
+        <WaypointSection name="Waypoints">
+            <Waypoint type="Stand" x="32328" y="31778" z="8" rangeX="1" rangeY="1" label="w000"/>
+            <Waypoint type="Action" x="32328" y="31778" z="8" rangeX="1" rangeY="1" label="w001" script="wait(500, 1000)&#10;closewindows()&#10;setsetting(&quot;Looting/OpenNextBP&quot;, &quot;no&quot;)&#10;wait(500, 1000)&#10;openitem(mainbp, 'back') &#10;wait(500, 1000)&#10;resizewindows()&#10;wait(500, 1000)&#10;openitem(lootbp, mainbp, true)&#10;wait(500, 1000)&#10;resizewindows()&#10;wait(500, 1000)"/>
+            <Waypoint type="Action" x="32328" y="31778" z="8" rangeX="1" rangeY="1" label="w002" script="if windowcount_ib() &lt; 2 then gotolabel('w001') end"/>
+            <Waypoint type="Action" x="32328" y="31778" z="8" rangeX="1" rangeY="1" label="w003" script="reachgrounditem(&quot;depot&quot;)&#10;wait(2000)&#10;openitem(&quot;depot&quot;)&#10;wait(2000)&#10;openitem(&quot;depot chest&quot;, &quot;locker&quot;)&#10;wait(2000)&#10;openitem(maindpbp, &quot;depot chest&quot;)&#10;wait(2000)&#10;&#10;for i=1,3 do&#10;depotdeposit_ib(stackdpbp, &quot;small topaz&quot;, &quot;small emerald&quot;, &quot;venison&quot;, &quot;fir cone&quot;, &quot;elven hoof&quot;, &quot;dowser&quot;)&#10;wait(500,1000)&#10;depotdeposit_ib(lootdpbp, &quot;crossbow&quot;)&#10;wait(500,1000)&#10;openitem(lootbp, lootbp)&#10;wait(2000)&#10;end"/>
+            <Waypoint type="Stand" x="32329" y="31780" z="8" rangeX="1" rangeY="1" label="w004"/>
+            <Waypoint type="Action" x="32329" y="31780" z="8" rangeX="1" rangeY="1" label="w005" script="wait(500, 1000)&#10;closewindows()&#10;setsetting(&quot;Looting/OpenNextBP&quot;, &quot;no&quot;)&#10;wait(500, 1000)&#10;openitem(mainbp, 'back') &#10;wait(500, 1000)&#10;resizewindows()&#10;wait(500, 1000)&#10;openitem(suppliebp, mainbp, true)&#10;wait(500, 1000)&#10;resizewindows()&#10;wait(500, 1000)"/>
+            <Waypoint type="Stand" x="32332" y="31781" z="8" rangeX="1" rangeY="1" label="w006"/>
+            <Waypoint type="Stand" x="32327" y="31782" z="7" rangeX="1" rangeY="1" label="w007"/>
+            <Waypoint type="Action" x="32327" y="31782" z="7" rangeX="1" rangeY="1" label="w008" script="if not islocation() then gotolabel('w006') end"/>
+            <Waypoint type="Stand" x="32326" y="31782" z="7" rangeX="1" rangeY="1" label="w009"/>
+            <Waypoint type="Action" x="32326" y="31782" z="7" rangeX="1" rangeY="1" label="w010" script="local mana = positive(manaamount - itemcount(mananame, 'all')) * manaprice&#10;local health = positive(healthamount - itemcount(healthname, 'all')) * healthprice&#10;local Total = mana + health + 2000&#10;&#10;say(&quot;hi&quot;)&#10;wait(1500,2500)&#10;npcsay(&quot;deposit all&quot;)&#10;wait(200,300) &#10;npcsay(&quot;yes&quot;)&#10;wait(200,300) &#10;&#10;if Total &gt; 0 then   &#10;   npcsay(&quot;withdraw &quot;..Total)   &#10;   wait(200,300)    &#10;   npcsay(&quot;yes&quot;)   &#10;   wait(200,300)&#10;   npcsay(&quot;Balance&quot;)&#10;   wait(200,300)&#10;end"/>
+            <Waypoint type="Stand" x="32327" y="31789" z="7" rangeX="1" rangeY="1" label="w011"/>
+            <Waypoint type="Stand" x="32342" y="31793" z="7" rangeX="1" rangeY="1" label="w012"/>
+            <Waypoint type="Stand" x="32342" y="31807" z="7" rangeX="1" rangeY="1" label="w013"/>
+            <Waypoint type="Stand" x="32346" y="31818" z="7" rangeX="1" rangeY="1" label="w014"/>
+            <Waypoint type="Stand" x="32350" y="31826" z="7" rangeX="1" rangeY="1" label="w015"/>
+            <Waypoint type="Stand" x="32345" y="31828" z="7" rangeX="1" rangeY="1" label="w016"/>
+            <Waypoint type="Action" x="32345" y="31828" z="7" rangeX="1" rangeY="1" label="w017" script="if not islocation() then gotolabel('w011') end"/>
+            <Waypoint type="Stand" x="32345" y="31829" z="7" rangeX="1" rangeY="1" label="w018"/>
+            <Waypoint type="Action" x="32345" y="31829" z="7" rangeX="1" rangeY="1" label="w019" script="wait(1500,2000)&#10;opentrade()&#10;wait(600)&#10;sellflasks()&#10;buyitemsupto(mananame, manaamount)&#10;buyitemsupto(healthname, healthamount)&#10;&#10;while itemcount(mananame, mainbp) &gt; 0 do&#10;moveitems(mananame, suppliebp, mainbp, 100)&#10;wait(400, 800)&#10;while itemcount(healthname, mainbp) &gt; 0 do&#10;moveitems(healthname, suppliebp, mainbp, 100)&#10;wait(400, 800)&#10;end&#10;end"/>
+            <Waypoint type="Stand" x="32354" y="31822" z="7" rangeX="1" rangeY="1" label="w020"/>
+            <Waypoint type="Stand" x="32368" y="31821" z="7" rangeX="1" rangeY="1" label="w021"/>
+            <Waypoint type="Stand" x="32368" y="31812" z="7" rangeX="1" rangeY="1" label="w022"/>
+            <Waypoint type="Stand" x="32368" y="31796" z="7" rangeX="1" rangeY="1" label="w023"/>
+            <Waypoint type="Stand" x="32375" y="31789" z="7" rangeX="1" rangeY="1" label="w024"/>
+            <Waypoint type="Stand" x="32388" y="31785" z="7" rangeX="1" rangeY="1" label="w025"/>
+            <Waypoint type="Stand" x="32401" y="31785" z="7" rangeX="1" rangeY="1" label="w026"/>
+            <Waypoint type="Stand" x="32401" y="31766" z="7" rangeX="1" rangeY="1" label="w027"/>
+            <Waypoint type="Stand" x="32412" y="31750" z="7" rangeX="1" rangeY="1" label="w028"/>
+            <Waypoint type="Action" x="32412" y="31750" z="7" rangeX="1" rangeY="1" label="w029" script="if not islocation() then gotolabel('w020') end"/>
+            <Waypoint type="Stand" x="32414" y="31748" z="7" rangeX="1" rangeY="1" label="w030"/>
+            <Waypoint type="Action" x="32414" y="31748" z="7" rangeX="1" rangeY="1" label="w031" script="closewindows() &#10;setsetting(&quot;Looting/OpenNextBP&quot;, &quot;yes&quot;)&#10;wait(500,1000) &#10;openitem(mainbp, &quot;back&quot;) &#10;wait(500,1000) &#10;resizewindows()&#10;wait(500,1000) &#10;openitem(suppliebp, mainbp, true) &#10;wait(500,1000) &#10;resizewindows()  &#10;wait(500,1000) &#10;openitem(lootbp, mainbp, true) &#10;wait(500,1000) &#10;resizewindows()&#10;wait(500,1000) &#10;openitem(goldbp, mainbp, true) &#10;wait(500,1000) &#10;resizewindows()"/>
+            <Waypoint type="Action" x="32414" y="31748" z="7" rangeX="1" rangeY="1" label="w032" script="if windowcount_ib() &lt; 4 then gotolabel('w031') end"/>
+            <Waypoint type="Stand" x="32419" y="31742" z="7" rangeX="1" rangeY="1" label="w033"/>
+            <Waypoint type="Stand" x="32423" y="31732" z="7" rangeX="1" rangeY="1" label="w034"/>
+            <Waypoint type="Stand" x="32431" y="31721" z="7" rangeX="1" rangeY="1" label="w035"/>
+            <Waypoint type="Stand" x="32426" y="31716" z="7" rangeX="1" rangeY="1" label="w036"/>
+            <Waypoint type="Stand" x="32424" y="31715" z="7" rangeX="1" rangeY="1" label="w037"/>
+            <Waypoint type="Stand" x="32425" y="31717" z="6" rangeX="1" rangeY="1" label="start"/>
+            <Waypoint type="Action" x="32425" y="31717" z="6" rangeX="1" rangeY="1" label="w039" script="if not islocation() then gotolabel('w033') end"/>
+            <Waypoint type="Stand" x="32428" y="31716" z="6" rangeX="1" rangeY="1" label="w040"/>
+            <Waypoint type="Stand" x="32425" y="31716" z="5" rangeX="1" rangeY="1" label="w041"/>
+            <Waypoint type="Action" x="32425" y="31716" z="5" rangeX="1" rangeY="1" label="w042" script="if not islocation() then gotolabel('w040') end"/>
+            <Waypoint type="Stand" x="32421" y="31718" z="5" rangeX="1" rangeY="1" label="w043"/>
+            <Waypoint type="Stand" x="32426" y="31716" z="4" rangeX="1" rangeY="1" label="w044"/>
+            <Waypoint type="Action" x="32426" y="31716" z="4" rangeX="1" rangeY="1" label="w045" script="if not islocation() then gotolabel('w043') end"/>
+            <Waypoint type="Stand" x="32421" y="31718" z="4" rangeX="1" rangeY="1" label="w046"/>
+            <Waypoint type="Stand" x="32424" y="31717" z="5" rangeX="1" rangeY="1" label="w047"/>
+            <Waypoint type="Action" x="32424" y="31717" z="5" rangeX="1" rangeY="1" label="w048" script="if not islocation() then gotolabel('w046') end"/>
+            <Waypoint type="Stand" x="32428" y="31716" z="5" rangeX="1" rangeY="1" label="w049"/>
+            <Waypoint type="Stand" x="32425" y="31717" z="6" rangeX="1" rangeY="1" label="w050"/>
+            <Waypoint type="Action" x="32425" y="31717" z="6" rangeX="1" rangeY="1" label="w051" script="if not islocation() then gotolabel('w049') end"/>
+            <Waypoint type="Stand" x="32426" y="31703" z="6" rangeX="1" rangeY="1" label="w052"/>
+            <Waypoint type="Stand" x="32437" y="31703" z="6" rangeX="1" rangeY="1" label="w053"/>
+            <Waypoint type="Stand" x="32443" y="31703" z="6" rangeX="1" rangeY="1" label="w054"/>
+            <Waypoint type="Stand" x="32457" y="31705" z="6" rangeX="1" rangeY="1" label="w055"/>
+            <Waypoint type="Stand" x="32457" y="31703" z="6" rangeX="1" rangeY="1" label="w056"/>
+            <Waypoint type="Stand" x="32459" y="31705" z="5" rangeX="1" rangeY="1" label="w057"/>
+            <Waypoint type="Action" x="32459" y="31705" z="5" rangeX="1" rangeY="1" label="w058" script="if not islocation() then gotolabel('w052') end"/>
+            <Waypoint type="Stand" x="32457" y="31706" z="5" rangeX="1" rangeY="1" label="w059"/>
+            <Waypoint type="Stand" x="32457" y="31703" z="4" rangeX="1" rangeY="1" label="w060"/>
+            <Waypoint type="Action" x="32457" y="31703" z="4" rangeX="1" rangeY="1" label="w061" script="if not islocation() then gotolabel('w059') end"/>
+            <Waypoint type="Stand" x="32457" y="31706" z="4" rangeX="1" rangeY="1" label="w062"/>
+            <Waypoint type="Stand" x="32458" y="31705" z="5" rangeX="1" rangeY="1" label="w063"/>
+            <Waypoint type="Action" x="32458" y="31705" z="5" rangeX="1" rangeY="1" label="w064" script="if not islocation() then gotolabel('w062') end"/>
+            <Waypoint type="Stand" x="32457" y="31703" z="5" rangeX="1" rangeY="1" label="w065"/>
+            <Waypoint type="Stand" x="32457" y="31706" z="6" rangeX="1" rangeY="1" label="w066"/>
+            <Waypoint type="Action" x="32457" y="31706" z="6" rangeX="1" rangeY="1" label="w067" script="if not islocation() then gotolabel('w065') end"/>
+            <Waypoint type="Stand" x="32457" y="31714" z="6" rangeX="1" rangeY="1" label="w068"/>
+            <Waypoint type="Stand" x="32470" y="31713" z="6" rangeX="1" rangeY="1" label="w069"/>
+            <Waypoint type="Stand" x="32472" y="31715" z="6" rangeX="1" rangeY="1" label="w070"/>
+            <Waypoint type="Stand" x="32472" y="31719" z="5" rangeX="1" rangeY="1" label="w071"/>
+            <Waypoint type="Action" x="32472" y="31719" z="5" rangeX="1" rangeY="1" label="w072" script="if not islocation() then gotolabel('w068') end"/>
+            <Waypoint type="Stand" x="32471" y="31731" z="5" rangeX="1" rangeY="1" label="w073"/>
+            <Waypoint type="Stand" x="32457" y="31731" z="5" rangeX="1" rangeY="1" label="w074"/>
+            <Waypoint type="Stand" x="32441" y="31730" z="5" rangeX="1" rangeY="1" label="w075"/>
+            <Waypoint type="Stand" x="32437" y="31729" z="5" rangeX="1" rangeY="1" label="w076"/>
+            <Waypoint type="Stand" x="32442" y="31730" z="4" rangeX="1" rangeY="1" label="w077"/>
+            <Waypoint type="Action" x="32442" y="31730" z="4" rangeX="1" rangeY="1" label="w078" script="if not islocation() then gotolabel('w073') end"/>
+            <Waypoint type="Stand" x="32442" y="31727" z="4" rangeX="1" rangeY="1" label="w079"/>
+            <Waypoint type="Stand" x="32441" y="31731" z="3" rangeX="1" rangeY="1" label="w080"/>
+            <Waypoint type="Action" x="32441" y="31731" z="3" rangeX="1" rangeY="1" label="w081" script="if not islocation() then gotolabel('w079') end"/>
+            <Waypoint type="Stand" x="32442" y="31727" z="3" rangeX="1" rangeY="1" label="w082"/>
+            <Waypoint type="Stand" x="32440" y="31731" z="4" rangeX="1" rangeY="1" label="w083"/>
+            <Waypoint type="Action" x="32440" y="31731" z="4" rangeX="1" rangeY="1" label="w084" script="if not islocation() then gotolabel('w082') end"/>
+            <Waypoint type="Stand" x="32437" y="31729" z="4" rangeX="1" rangeY="1" label="w085"/>
+            <Waypoint type="Stand" x="32441" y="31731" z="5" rangeX="1" rangeY="1" label="w086"/>
+            <Waypoint type="Action" x="32441" y="31731" z="5" rangeX="1" rangeY="1" label="w087" script="if not islocation() then gotolabel('w085') end"/>
+            <Waypoint type="Stand" x="32444" y="31732" z="5" rangeX="1" rangeY="1" label="w088"/>
+            <Waypoint type="Stand" x="32442" y="31729" z="6" rangeX="1" rangeY="1" label="w089"/>
+            <Waypoint type="Action" x="32442" y="31729" z="6" rangeX="1" rangeY="1" label="w090" script="if not islocation() then gotolabel('w088') end"/>
+            <Waypoint type="Stand" x="32438" y="31729" z="6" rangeX="1" rangeY="1" label="w091"/>
+            <Waypoint type="Stand" x="32441" y="31731" z="7" rangeX="1" rangeY="1" label="w092"/>
+            <Waypoint type="Action" x="32441" y="31731" z="7" rangeX="1" rangeY="1" label="w093" script="if not islocation() then gotolabel('w091') end"/>
+            <Waypoint type="Stand" x="32443" y="31732" z="7" rangeX="1" rangeY="1" label="w094"/>
+            <Waypoint type="Stand" x="32445" y="31735" z="8" rangeX="1" rangeY="1" label="w095"/>
+            <Waypoint type="Action" x="32445" y="31735" z="8" rangeX="1" rangeY="1" label="w096" script="if not islocation() then gotolabel('w094') end"/>
+            <Waypoint type="Stand" x="32454" y="31739" z="8" rangeX="1" rangeY="1" label="w097"/>
+            <Waypoint type="Stand" x="32461" y="31747" z="8" rangeX="1" rangeY="1" label="w098"/>
+            <Waypoint type="Stand" x="32454" y="31740" z="8" rangeX="1" rangeY="1" label="w099"/>
+            <Waypoint type="Stand" x="32445" y="31735" z="8" rangeX="1" rangeY="1" label="w100"/>
+            <Waypoint type="Stand" x="32443" y="31732" z="8" rangeX="1" rangeY="1" label="w101"/>
+            <Waypoint type="Stand" x="32440" y="31731" z="7" rangeX="1" rangeY="1" label="w102"/>
+            <Waypoint type="Action" x="32440" y="31731" z="7" rangeX="1" rangeY="1" label="w103" script="if not islocation() then gotolabel('w097') end"/>
+            <Waypoint type="Stand" x="32438" y="31729" z="7" rangeX="1" rangeY="1" label="w104"/>
+            <Waypoint type="Stand" x="32441" y="31731" z="6" rangeX="1" rangeY="1" label="w105"/>
+            <Waypoint type="Action" x="32441" y="31731" z="6" rangeX="1" rangeY="1" label="w106" script="if not islocation() then gotolabel('w104') end"/>
+            <Waypoint type="Stand" x="32426" y="31732" z="6" rangeX="1" rangeY="1" label="w107"/>
+            <Waypoint type="Stand" x="32426" y="31721" z="6" rangeX="1" rangeY="1" label="w108"/>
+            <Waypoint type="Stand" x="32423" y="31717" z="6" rangeX="1" rangeY="1" label="w109"/>
+            <Waypoint type="Action" x="32423" y="31717" z="6" rangeX="1" rangeY="1" label="refillcheck" script="if itemcount(mananame, 'all') &gt; manaleave and itemcount(healthname, 'all') &gt; healthleave and $cap &gt; capleave then&#10;    gotolabel('start')&#10;else&#10;    gotolabel('Leave')&#10;end"/>
+            <Waypoint type="Stand" x="32424" y="31715" z="6" rangeX="1" rangeY="1" label="Leave"/>
+            <Waypoint type="Stand" x="32434" y="31716" z="7" rangeX="1" rangeY="1" label="w111"/>
+            <Waypoint type="Action" x="32434" y="31716" z="7" rangeX="1" rangeY="1" label="w112" script="if not islocation() then gotolabel('Leave') end"/>
+            <Waypoint type="Stand" x="32422" y="31745" z="7" rangeX="1" rangeY="1" label="w113"/>
+            <Waypoint type="Stand" x="32413" y="31750" z="7" rangeX="1" rangeY="1" label="w115"/>
+            <Waypoint type="Stand" x="32402" y="31761" z="7" rangeX="1" rangeY="1" label="w116"/>
+            <Waypoint type="Stand" x="32400" y="31776" z="7" rangeX="1" rangeY="1" label="w117"/>
+            <Waypoint type="Stand" x="32395" y="31785" z="7" rangeX="1" rangeY="1" label="w118"/>
+            <Waypoint type="Stand" x="32380" y="31786" z="7" rangeX="1" rangeY="1" label="w119"/>
+            <Waypoint type="Stand" x="32367" y="31789" z="7" rangeX="1" rangeY="1" label="w120"/>
+            <Waypoint type="Stand" x="32350" y="31789" z="7" rangeX="1" rangeY="1" label="w121"/>
+            <Waypoint type="Stand" x="32336" y="31783" z="7" rangeX="1" rangeY="1" label="w122"/>
+            <Waypoint type="Stand" x="32332" y="31782" z="7" rangeX="1" rangeY="1" label="w123"/>
+            <Waypoint type="Action" x="32332" y="31782" z="7" rangeX="1" rangeY="1" label="w124" script="if not islocation() then gotolabel('w113') end"/>
+            <Waypoint type="Stand" x="32332" y="31781" z="7" rangeX="1" rangeY="1" label="w125"/>
+            <Waypoint type="Stand" x="32329" y="31779" z="8" rangeX="1" rangeY="1" label="w126"/>
+            <Waypoint type="Action" x="32329" y="31779" z="8" rangeX="1" rangeY="1" label="w127" script="if not islocation() then gotolabel('w125') end"/>
+        </WaypointSection>
+    </Cavebot>
+    <Looting enabled="yes">
+        <Options>
+            <Option range="50"/>
+            <Option moveItemsQuickly="yes"/>
+            <Option eatFoodFromCorpse="yes"/>
+            <Option openNextBP="no"/>
+            <Option openBPsAtLogin="no"/>
+            <Option valuableBodies="3000"/>
+            <Option ultraValuableBodies="50000"/>
+            <Option alertOnValuableBodies="no"/>
+            <Option openValuableBodiesOnly="no"/>
+            <Option openUltraValuableBodiesImmediately="no"/>
+            <Option policy="Loot After Melee Kill"/>
+            <LootingDestinations/>
+        </Options>
+        <LootingProfile name="LootList" isCurrentProfile="yes">
+            <LootItem name="Small Emerald" id="3032" sellPrice="250" weight="0.10" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Dowser" id="19110" sellPrice="35" weight="3.60" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Fir Cone" id="19111" sellPrice="25" weight="1.90" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Crossbow" id="3349" sellPrice="160" weight="40.00" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Small Topaz" id="9057" sellPrice="200" weight="0.10" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Venison" id="18995" sellPrice="55" weight="3.80" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Elven Hoof" id="18994" sellPrice="115" weight="2.30" destination="02" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+            <LootItem name="Gold Coin" id="3031" sellPrice="1" weight="0.10" destination="03" action="Loot" lootCondition="Has Cap to Loot" itemCategory="" alertOnDrop="no" alertOnMiss="no"/>
+        </LootingProfile>
+    </Looting>
+    <Supplies>
+        <Options>
+            <Option defaultBackpack=""/>
+            <Option extraCashMin="1000" extraCashMax="2500"/>
+            <Option autoSwitchProfiles="no"/>
+        </Options>
+        <SupplyProfile name="SupplyList" vocation="Knight, Paladin, Sorcerer, Druid" level="0" isCurrentProfile="yes"/>
+    </Supplies>
+    <Targeting enabled="yes" allowDiagonalMovement="yes" autoSwitchProfiles="no" nonPvPMode="no">
+        <TargetingProfile name="TargetList" vocation="Knight, Paladin, Sorcerer, Druid" level="500" targetMustBeShootable="no" targetMustBeReachable="yes" isCurrentProfile="yes">
+            <Priorities>
+                <Priority health="70"/>
+                <Priority proximity="90"/>
+                <Priority danger="50"/>
+                <Priority random="0"/>
+                <Priority lure="30"/>
+                <Priority stick="2"/>
+            </Priorities>
+            <Creatures>
+                <Creature name="Wilting Leaf Golem" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="0" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="500" spamMax="1000"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Leaf Golem" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="0" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="500" spamMax="1000"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Forest Fury" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="Reach" distance="0" attackMode="No Change" firstSpell="Brutal Strike" secondSpell="" thirdSpell="" fourthSpell="" spamMin="500" spamMax="1000"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="no" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+                <Creature name="Others" amount="Any" category="" dontLoot="no" playAlarm="no" syncSpells="no">
+                    <FightingSettings>
+                        <Setting index="0" hpFrom="0" hpTo="100" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="0" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="500" spamMax="1000"/>
+                        <Setting index="1" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="2" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                        <Setting index="3" hpFrom="0" hpTo="0" danger="0" onlyIfTrapped="yes" mustAttackMe="no" action="Attack" avoidance="No Avoidance" desiredStance="No Movement" distance="3" attackMode="No Change" firstSpell="" secondSpell="" thirdSpell="" fourthSpell="" spamMin="300" spamMax="500"/>
+                    </FightingSettings>
+                </Creature>
+            </Creatures>
+        </TargetingProfile>
+    </Targeting>
+    <OtherBots>
+        <HealingPaths>
+            <entryPath from="Healer/Rules/Anti-Paralyze-High-Hp" to="ConditionHealer/Rules/Anti Paralyze High Hp"/>
+            <entryPath from="Healer/Rules/SHP" to="PotionHealer/Rules/SHP"/>
+            <entryPath from="Healer/Rules/MP" to="PotionHealer/Rules/MP"/>
+            <entryPath from="Healer/Rules/Exura-Ico" to="SpellHealer/Rules/Exura Ico"/>
+        </HealingPaths>
+        <TargetingPaths>
+            <entryPath from="Targeting/Monsters/Wilting-Leaf-Golem/ListSettings/Setting0" to="Targeting/Creatures/Wilting Leaf Golem/Setting1"/>
+            <entryPath from="Targeting/Monsters/Leaf-Golem/ListSettings/Setting0" to="Targeting/Creatures/Leaf Golem/Setting1"/>
+            <entryPath from="Targeting/Monsters/All/ListSettings/Setting0" to="Targeting/Creatures/Others/Setting1"/>
+            <entryPath from="Targeting/Monsters/Forest-Fury/ListSettings/Setting0" to="Targeting/Creatures/Forest Fury/Setting1"/>
+        </TargetingPaths>
+    </OtherBots>
+</WindbotSettings>
